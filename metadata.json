@@ -1,0 +1,7 @@
+{
+  "name": "Remix: Elo - Sync",
+  "description": "A minimalist, low-pressure spoken Chinese practice platform designed for overseas learners to gain speaking confidence through real-time conversations.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
