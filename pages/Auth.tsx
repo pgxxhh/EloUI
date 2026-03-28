@@ -92,6 +92,11 @@ const Auth: React.FC<AuthProps> = ({ initialRole, initialMode, onSuccess }) => {
       </Card>
       
       <p className="text-center mt-8 text-xs text-zinc-400">
+        {mode === 'SIGNUP' && (
+          <span className="block mb-2 text-[10px] text-zinc-400/60">
+            A verification email will be sent, but you can start speaking immediately and verify later.
+          </span>
+        )}
         By continuing, you agree to Elo's <span className="underline cursor-pointer">Terms of Service</span> and <span className="underline cursor-pointer">Privacy Policy</span>.
       </p>
     </div>
