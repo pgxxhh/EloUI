@@ -20,7 +20,6 @@ export type AppView =
   | 'AUTH'
   | 'HISTORY'
   | 'HISTORY_DETAIL'
-  | 'BOOKING'
   | 'ADMIN'
   | 'FIND_COACH'
   | 'COACH_HUB'

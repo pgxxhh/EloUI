@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
-import { AppView, AuthRole, AuthMode } from './types';
+import { AppView, AuthRole, AuthMode, Coach } from './types';
 import Layout from './components/Layout';
 import StudentHome from './pages/StudentHome';
 import Matching from './pages/Matching';
@@ -28,6 +28,7 @@ import PreCheck from './pages/PreCheck';
 import CoachEarnings from './pages/CoachEarnings';
 import SessionProcessing from './pages/SessionProcessing';
 import { Button } from './components/UI';
+import { SCENARIOS } from './constants';
 import { Icons } from './constants';
 import { VerificationModal, VerificationWaitingPage } from './components/VerificationUI';
 
@@ -35,6 +36,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<AppView>('LANDING');
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [selectedContextId, setSelectedContextId] = useState<string | null>(null);
+  const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
@@ -90,24 +92,8 @@ const App: React.FC = () => {
             })} 
             onGoToPayment={() => checkVerification(() => setView('BILLING'))}
             onGoToHistory={() => setView('HISTORY')}
-            onGoToBookings={() => setView('BOOKING')}
             onJoinLesson={() => setView('PRE_CHECK')}
           />
-        );
-      case 'BOOKING':
-        return (
-          <div className="max-w-4xl mx-auto py-12 space-y-8">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" onClick={() => setView('STUDENT_HOME')} className="p-2">
-                <Icons.ArrowRight className="w-5 h-5 rotate-180" />
-              </Button>
-              <h1 className="text-3xl font-bold text-zinc-900">My Bookings</h1>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {/* Reuse UserBookingCard here or create a more detailed list */}
-              <p className="text-zinc-500 italic">Complete booking list view coming soon...</p>
-            </div>
-          </div>
         );
       case 'HISTORY':
         return (
@@ -129,7 +115,13 @@ const App: React.FC = () => {
       case 'BILLING':
         return <Billing onBack={() => setView('STUDENT_HOME')} checkVerification={checkVerification} />;
       case 'MATCHING':
-        return <Matching onMatchFound={() => setView('SESSION')} />;
+        return (
+          <Matching 
+            onMatchFound={() => setView('VOICE_CALL')} 
+            coachName={selectedCoach?.name}
+            topicName={SCENARIOS.find(s => s.id === selectedContextId)?.chineseTitle || 'Open Conversation'}
+          />
+        );
       case 'SESSION':
         return (
           <Session 
@@ -200,7 +192,10 @@ const App: React.FC = () => {
         return (
           <FindCoach 
             selectedContextId={selectedContextId}
-            onStartLesson={(type) => setView(type === 'VOICE' ? 'VOICE_CALL' : 'CLASSROOM')} 
+            onStartLesson={(type, coach) => {
+              setSelectedCoach(coach);
+              setView('MATCHING');
+            }} 
             onBack={() => setView('STUDENT_HOME')}
           />
         );

@@ -20,27 +20,16 @@ import {
 // --- CoachCard ---
 export const CoachCard: React.FC<{
   coach: Coach;
-  suitabilityReason?: string;
   onCallNow: (coach: Coach) => void;
   onBookLater: (coach: Coach) => void;
   onViewDetails: (coach: Coach) => void;
-}> = ({ coach, suitabilityReason, onCallNow, onBookLater, onViewDetails }) => {
+}> = ({ coach, onCallNow, onBookLater, onViewDetails }) => {
   const isOnline = coach.isOnline && !coach.isBusy;
   
   return (
     <Card className="group relative overflow-hidden flex flex-col h-full border-zinc-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-50/50 transition-all duration-500 bg-white p-0">
-      {/* 1. Subtle Suitability Badge */}
-      {suitabilityReason && (
-        <div className="absolute top-4 right-4 z-10">
-          <div className="px-2 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[9px] font-bold uppercase tracking-wider border border-indigo-100/50 flex items-center gap-1">
-            <Sparkles className="w-2.5 h-2.5" />
-            {suitabilityReason}
-          </div>
-        </div>
-      )}
-
       <div className="p-6 flex-1 flex flex-col">
-        {/* 2. Avatar & Identity */}
+        {/* 1. Avatar & Identity */}
         <div className="flex gap-4 items-start mb-5">
           <div className="relative shrink-0">
             <div className="w-14 h-14 rounded-2xl overflow-hidden bg-zinc-50 border border-zinc-100">
@@ -66,7 +55,7 @@ export const CoachCard: React.FC<{
           </div>
         </div>
 
-        {/* 3. Headline & Expertise */}
+        {/* 2. Headline & Expertise */}
         <div className="flex-1">
           <p className="text-sm font-bold text-zinc-800 line-clamp-2 leading-snug mb-4">
             {coach.headline}
@@ -80,19 +69,21 @@ export const CoachCard: React.FC<{
           </div>
         </div>
 
-        {/* 4. Decision Support & Actions */}
+        {/* 3. Decision Support & Actions */}
         <div className="mt-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-[11px] font-medium text-zinc-500">
               <Clock className="w-3.5 h-3.5 opacity-50" />
               <span className="truncate max-w-[120px]">{isOnline ? 'Ready now' : `Next: ${coach.nextSlot || 'TBD'}`}</span>
             </div>
-            <button 
-              onClick={() => onViewDetails(coach)}
-              className="text-[11px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors whitespace-nowrap"
-            >
-              Full Profile
-            </button>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => onViewDetails(coach)}
+                className="text-[11px] font-bold text-zinc-400 hover:text-indigo-600 transition-colors whitespace-nowrap"
+              >
+                Full Profile
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
-import { Coach, LessonRequest } from '../types';
+import { Coach, LessonRequest, Scenario } from '../types';
 import { Button, Card, Badge, Modal } from '../components/UI';
+import { Icons } from '../constants';
 import { CoachCard, DurationPicker } from '../components/LessonUI';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -105,16 +106,9 @@ const mockCoaches: Coach[] = [
   }
 ];
 
-const COACH_SUITABILITY: Record<string, string> = {
-  'c1': 'Coffee Shop Chat',
-  'c2': 'Finding Your Way',
-  'c3': 'Sharing Your World',
-  'c4': 'First Interview'
-};
-
 interface FindCoachProps {
   selectedContextId: string | null;
-  onStartLesson: (type: 'VOICE' | 'VIDEO') => void;
+  onStartLesson: (type: 'VOICE' | 'VIDEO', coach: Coach) => void;
   onBack: () => void;
 }
 
@@ -154,14 +148,13 @@ const FindCoach: React.FC<FindCoachProps> = ({ selectedContextId, onStartLesson,
   };
 
   const handleStartLesson = () => {
+    if (!selectedCoach) return;
     setIsRequesting(true);
+    // Short delay for the "Connecting..." feel before switching to Matching page
     setTimeout(() => {
       setIsRequesting(false);
-      setRequestSent(true);
-      setTimeout(() => {
-        onStartLesson('VOICE');
-      }, 3000);
-    }, 2000);
+      onStartLesson('VOICE', selectedCoach);
+    }, 1500);
   };
 
   const closeModal = () => {
@@ -202,59 +195,51 @@ const FindCoach: React.FC<FindCoachProps> = ({ selectedContextId, onStartLesson,
       </div>
 
       {/* 2. Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-6">
         <div className="space-y-1">
           <h1 className="text-4xl font-bold text-zinc-900 tracking-tight">
-            Pick your coach
+            Choose your coach
           </h1>
           <p className="text-zinc-500 text-sm max-w-xl">
-            Choose a coach to <span className="text-indigo-600 font-bold">practice now</span> or <span className="text-zinc-900 font-bold">schedule for later</span>.
+            Connect with a native speaker for a 1:1 conversation.
           </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-end">
+            <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-[0.2em]">Session Summary</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold text-zinc-500">
+                {selectedContext?.chineseTitle || 'Open Conversation'}
+              </span>
+              <button 
+                onClick={onBack}
+                className="text-[9px] font-bold text-indigo-400 hover:text-indigo-600 uppercase tracking-widest transition-colors"
+              >
+                Change
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 3. Unified Action Belt */}
+      {/* 3. Search & Filter Belt */}
       <div className="space-y-6">
-        <div className="flex flex-col xl:flex-row gap-4">
-          {/* Goal & Context */}
-          <div className="flex-1 flex items-center gap-4 p-4 bg-white border border-zinc-100 rounded-[2rem] shadow-sm hover:border-indigo-100 transition-colors group">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">Active Goal</p>
-                <Badge className="text-[9px] bg-indigo-50 text-indigo-600 border-none">{selectedContext?.level || 'All Levels'}</Badge>
-              </div>
-              <h2 className="text-base font-bold text-zinc-900 truncate">{selectedContext?.chineseTitle} · {selectedContext?.title || 'General Practice'}</h2>
-              <p className="text-[10px] text-zinc-400 truncate italic">Focus: {selectedContext?.outcome}</p>
-            </div>
-            <button 
-              onClick={onBack}
-              className="px-4 py-2 bg-zinc-50 hover:bg-zinc-100 rounded-xl text-[11px] font-bold text-zinc-600 transition-colors border border-zinc-100"
-            >
-              Change
-            </button>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+            <input 
+              type="text" 
+              placeholder="Search coaches by name, specialty, or style..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 pr-4 py-3.5 bg-white border border-zinc-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-sm"
+            />
           </div>
-
-          {/* Search, Sort & Filter */}
-          <div className="xl:w-[500px] flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-              <input 
-                type="text" 
-                placeholder="Search by name or specialty..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 bg-white border border-zinc-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-sm"
-              />
-            </div>
-            <div className="relative">
-              <Button variant="secondary" className="bg-white border border-zinc-100 py-3.5 px-4 rounded-2xl text-xs font-bold text-zinc-600 whitespace-nowrap">
-                Sort: {sortBy}
-                <ChevronDown className="w-3.5 h-3.5 ml-1" />
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" className="bg-white border border-zinc-100 py-3.5 px-4 rounded-2xl text-xs font-bold text-zinc-600 whitespace-nowrap">
+              Sort: {sortBy}
+              <ChevronDown className="w-3.5 h-3.5 ml-1" />
+            </Button>
           </div>
         </div>
 
@@ -283,7 +268,6 @@ const FindCoach: React.FC<FindCoachProps> = ({ selectedContextId, onStartLesson,
             <CoachCard 
               key={coach.id} 
               coach={coach} 
-              suitabilityReason={COACH_SUITABILITY[coach.id]}
               onCallNow={handleCallNow}
               onBookLater={handleBookLater}
               onViewDetails={setViewDetailsCoach}
@@ -465,194 +449,173 @@ const FindCoach: React.FC<FindCoachProps> = ({ selectedContextId, onStartLesson,
       {/* 5. Setup Modal (Call Now / Book Later) */}
       <Modal isOpen={!!selectedCoach} onClose={closeModal}>
         <AnimatePresence mode="wait">
-          {!requestSent ? (
-            <motion.div 
-              key="setup"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="space-y-8"
-            >
-              {/* Modal Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden bg-zinc-50 border border-zinc-100">
-                    <img src={selectedCoach?.avatar} alt={selectedCoach?.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl text-zinc-900">{selectedCoach?.name}</h3>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                        <span className="text-[10px] font-bold text-zinc-900">{selectedCoach?.rating}</span>
-                      </div>
-                      <span className="w-0.5 h-0.5 rounded-full bg-zinc-200" />
-                      <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                        {setupMode === 'INSTANT' ? 'Ready for session' : 'Schedule for later'}
-                      </span>
+          <motion.div 
+            key="setup"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="space-y-8"
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl overflow-hidden bg-zinc-50 border border-zinc-100">
+                  <img src={selectedCoach?.avatar} alt={selectedCoach?.name} className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-xl text-zinc-900">{selectedCoach?.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                      <span className="text-[10px] font-bold text-zinc-900">{selectedCoach?.rating}</span>
                     </div>
+                    <span className="w-0.5 h-0.5 rounded-full bg-zinc-200" />
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                      {setupMode === 'INSTANT' ? 'Ready for session' : 'Schedule for later'}
+                    </span>
                   </div>
                 </div>
-                <button onClick={closeModal} className="p-2 text-zinc-300 hover:text-zinc-900 transition-colors">
-                  <X className="w-6 h-6" />
+              </div>
+              <button onClick={closeModal} className="p-2 text-zinc-300 hover:text-zinc-900 transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Coach Trust Snippet (Audio + Bio) */}
+            <div className="p-5 bg-zinc-50 rounded-[2rem] border border-zinc-100 space-y-4">
+              <div className="flex items-center gap-4">
+                <button className="w-10 h-10 rounded-full bg-white text-indigo-600 flex items-center justify-center shadow-sm hover:scale-105 transition-transform">
+                  <Mic className="w-4 h-4" />
                 </button>
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-1 w-full bg-zinc-200 rounded-full overflow-hidden">
+                    <div className="h-full w-1/3 bg-indigo-500" />
+                  </div>
+                  <div className="flex justify-between text-[9px] font-mono text-zinc-400">
+                    <span>0:00</span>
+                    <span>{selectedCoach?.introAudioDuration}</span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-zinc-500 leading-relaxed italic line-clamp-2">
+                "{selectedCoach?.bio}"
+              </p>
+            </div>
+
+            {/* Setup Form */}
+            <div className="space-y-8">
+              {/* Time Slot for Scheduled - Highest Priority for Book Later */}
+              {setupMode === 'SCHEDULED' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-indigo-500" />
+                      Select Time
+                    </label>
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Required</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['Today, 4:30 PM', 'Today, 5:00 PM', 'Today, 5:30 PM', 'Today, 6:00 PM'].map(slot => (
+                      <button 
+                        key={slot} 
+                        onClick={() => setSelectedSlot(slot)}
+                        className={`p-4 text-left rounded-2xl border transition-all relative ${
+                          selectedSlot === slot 
+                            ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-500/10' 
+                            : 'border-zinc-100 bg-white hover:border-zinc-200'
+                        }`}
+                      >
+                        <p className={`text-sm font-bold ${selectedSlot === slot ? 'text-indigo-700' : 'text-zinc-900'}`}>{slot}</p>
+                        <p className="text-[10px] text-zinc-400 mt-1">Coach local time: 07:30 AM</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Duration - Primary */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-indigo-500" />
+                    Session Duration
+                  </label>
+                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Required</span>
+                </div>
+                <DurationPicker value={duration} onChange={setDuration} />
               </div>
 
-              {/* Coach Trust Snippet (Audio + Bio) */}
-              <div className="p-5 bg-zinc-50 rounded-[2rem] border border-zinc-100 space-y-4">
-                <div className="flex items-center gap-4">
-                  <button className="w-10 h-10 rounded-full bg-white text-indigo-600 flex items-center justify-center shadow-sm hover:scale-105 transition-transform">
-                    <Mic className="w-4 h-4" />
+              {/* Topic - Downgraded to a light session summary note */}
+              <div className="space-y-2 pt-4 border-t border-zinc-50">
+                <div className="flex items-center justify-between">
+                  <label className="text-[9px] font-bold text-zinc-300 uppercase tracking-[0.2em]">
+                    Session Note (Optional Starter)
+                  </label>
+                  <button 
+                    onClick={onBack}
+                    className="text-[9px] font-bold text-indigo-300 hover:text-indigo-500 uppercase tracking-widest transition-colors"
+                  >
+                    Change
                   </button>
-                  <div className="flex-1 space-y-1.5">
-                    <div className="h-1 w-full bg-zinc-200 rounded-full overflow-hidden">
-                      <div className="h-full w-1/3 bg-indigo-500" />
-                    </div>
-                    <div className="flex justify-between text-[9px] font-mono text-zinc-400">
-                      <span>0:00</span>
-                      <span>{selectedCoach?.introAudioDuration}</span>
-                    </div>
+                </div>
+                <div className="flex items-center gap-2.5 p-2.5 bg-zinc-50/30 rounded-xl border border-zinc-100/50">
+                  <div className="w-4 h-4 rounded bg-white flex items-center justify-center text-zinc-300 shadow-sm border border-zinc-100">
+                    <Sparkles className="w-2 h-2" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold text-zinc-500 truncate">
+                      {selectedContext?.chineseTitle || 'Open Conversation'}
+                    </p>
                   </div>
                 </div>
-                <p className="text-xs text-zinc-500 leading-relaxed italic line-clamp-2">
-                  "{selectedCoach?.bio}"
-                </p>
               </div>
+            </div>
 
-              {/* Setup Form */}
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                    <Clock className="w-3 h-3" />
-                    Select Duration
-                  </label>
-                  <DurationPicker value={duration} onChange={setDuration} />
-                  <p className="text-[10px] text-zinc-400 italic">
-                    Lesson ends automatically after {duration} minutes.
-                  </p>
+            {/* Wallet Summary */}
+            <div className="p-6 bg-indigo-50 rounded-[2rem] border border-indigo-100 space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2 text-indigo-600">
+                  <Zap className="w-4 h-4" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Wallet Status</span>
                 </div>
+                <span className="text-xs font-bold text-indigo-600">215 min available</span>
+              </div>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Session Cost</p>
+                  <p className="text-3xl font-bold text-zinc-900">{duration} <span className="text-sm font-normal text-zinc-400">min</span></p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Expected End</p>
+                  <p className="text-lg font-bold text-zinc-900 opacity-80">08:15 AM</p>
+                </div>
+              </div>
+            </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                    <MessageSquare className="w-3 h-3" />
-                    Session Topic
-                  </label>
-                  <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-zinc-100 shadow-sm">
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-bold text-zinc-900">{selectedContext?.chineseTitle} {selectedContext?.title}</p>
-                      <p className="text-[10px] text-zinc-500 italic">Target: {selectedContext?.outcome}</p>
-                    </div>
-                    <button 
-                      onClick={onBack}
-                      className="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 rounded-lg text-[10px] font-bold text-zinc-600 transition-colors border border-zinc-100"
-                    >
-                      Change
-                    </button>
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <Button variant="ghost" onClick={closeModal} className="flex-1 py-4 rounded-2xl text-zinc-400 font-bold hover:bg-zinc-50">
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleStartLesson}
+                disabled={isRequesting}
+                className="flex-[2] py-4 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-100 font-bold"
+              >
+                {isRequesting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    {setupMode === 'INSTANT' ? 'Connecting...' : 'Booking...'}
                   </div>
-                </div>
-
-                {setupMode === 'SCHEDULED' && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                        <Calendar className="w-3 h-3" />
-                        Select Time Slot
-                      </label>
-                      <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-widest">All times in Your Local Time</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {['Today, 4:30 PM', 'Today, 5:00 PM', 'Today, 5:30 PM', 'Today, 6:00 PM'].map(slot => (
-                        <button 
-                          key={slot} 
-                          onClick={() => setSelectedSlot(slot)}
-                          className={`p-4 text-left rounded-2xl border transition-all relative group ${
-                            selectedSlot === slot 
-                              ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-500/10' 
-                              : 'border-zinc-100 bg-white hover:border-zinc-200'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-1">
-                            <p className={`text-xs font-bold ${selectedSlot === slot ? 'text-indigo-700' : 'text-zinc-900'}`}>{slot}</p>
-                            {selectedSlot === slot && <CheckCircle className="w-3 h-3 text-indigo-600" />}
-                          </div>
-                          <p className="text-[9px] text-zinc-400 font-medium">Coach time: Tomorrow, 7:30 AM</p>
-                        </button>
-                      ))}
-                    </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    {setupMode === 'INSTANT' ? 'Confirm and Start' : 'Confirm Booking'}
+                    <ArrowRight className="w-4 h-4" />
                   </div>
                 )}
-              </div>
-
-              {/* Wallet Summary */}
-              <div className="p-6 bg-indigo-50 rounded-[2rem] border border-indigo-100 space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 text-indigo-600">
-                    <Zap className="w-4 h-4" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">Wallet Status</span>
-                  </div>
-                  <span className="text-xs font-bold text-indigo-600">215 min available</span>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div>
-                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Session Cost</p>
-                    <p className="text-3xl font-bold text-zinc-900">{duration} <span className="text-sm font-normal text-zinc-400">min</span></p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Expected End</p>
-                    <p className="text-lg font-bold text-zinc-900 opacity-80">08:15 AM</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <Button variant="ghost" onClick={closeModal} className="flex-1 py-4 rounded-2xl text-zinc-400 font-bold hover:bg-zinc-50">
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleStartLesson}
-                  disabled={isRequesting}
-                  className="flex-[2] py-4 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-100 font-bold"
-                >
-                  {isRequesting ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      {setupMode === 'INSTANT' ? 'Connecting...' : 'Booking...'}
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      {setupMode === 'INSTANT' ? 'Confirm and Start' : 'Confirm Booking'}
-                      <ArrowRight className="w-4 h-4" />
-                    </div>
-                  )}
-                </Button>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div 
-              key="success"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="py-16 flex flex-col items-center text-center space-y-8"
-            >
-              <div className="w-24 h-24 bg-emerald-50 rounded-[3rem] flex items-center justify-center text-emerald-500 shadow-xl shadow-emerald-100">
-                <CheckCircle className="w-12 h-12" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-3xl font-bold text-zinc-900">Request Sent!</h3>
-                <p className="text-zinc-500 max-w-xs mx-auto leading-relaxed">
-                  We've notified {selectedCoach?.name}. They usually respond within 60 seconds.
-                </p>
-              </div>
-              <div className="w-full max-w-xs p-5 bg-zinc-50 rounded-3xl border border-zinc-100 flex items-center justify-center gap-4">
-                <div className="w-2 h-2 bg-indigo-500 rounded-full animate-ping" />
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Waiting for coach...</span>
-              </div>
-              <Button variant="ghost" onClick={closeModal} className="text-zinc-400 text-xs font-bold uppercase tracking-widest">
-                Cancel and return
               </Button>
-            </motion.div>
-          )}
+            </div>
+          </motion.div>
         </AnimatePresence>
       </Modal>
     </div>

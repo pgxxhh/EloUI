@@ -52,13 +52,6 @@ const Layout: React.FC<LayoutProps> = ({
             </button>
 
             <button 
-              className={`text-sm font-medium ${currentView === 'BOOKING' ? 'text-indigo-600' : 'text-zinc-500 hover:text-zinc-900'}`}
-              onClick={() => setView('BOOKING')}
-            >
-              Bookings
-            </button>
-
-            <button 
               className={`text-sm font-medium ${currentView === 'HISTORY' ? 'text-indigo-600' : 'text-zinc-500 hover:text-zinc-900'}`}
               onClick={() => setView('HISTORY')}
             >

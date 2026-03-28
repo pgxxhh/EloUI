@@ -12,7 +12,6 @@ interface StudentHomeProps {
   onStartSession: () => void;
   onGoToPayment: () => void;
   onGoToHistory: () => void;
-  onGoToBookings: () => void;
   onJoinLesson: (bookingId: string) => void;
 }
 
@@ -53,7 +52,6 @@ const StudentHome: React.FC<StudentHomeProps> = ({
   onStartSession, 
   onGoToPayment, 
   onGoToHistory, 
-  onGoToBookings, 
   onJoinLesson 
 }) => {
   const [isViewAll, setIsViewAll] = useState(false);
@@ -83,18 +81,31 @@ const StudentHome: React.FC<StudentHomeProps> = ({
           </p>
         </div>
         
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-8">
           <div className="flex flex-wrap justify-center gap-4">
-            <Button onClick={onStartSession} className="px-12 py-6 text-lg rounded-2xl shadow-xl shadow-indigo-100 hover:scale-[1.02] transition-all">
-              <Icons.Mic className="w-5 h-5" />
-              Start Live Conversation
+            <Button onClick={onStartSession} className="px-12 py-8 text-xl rounded-3xl shadow-2xl shadow-indigo-200 hover:scale-[1.02] transition-all bg-indigo-600 text-white font-black">
+              <Icons.Mic className="w-6 h-6" />
+              Talk Now
             </Button>
-            <Button onClick={onGoToBookings} variant="secondary" className="px-8 py-6 text-lg rounded-2xl bg-white border-zinc-200 hover:bg-zinc-50">
-              <Icons.Calendar className="w-5 h-5 text-indigo-500" />
-              Book a Coach
+            <Button onClick={onStartSession} variant="secondary" className="px-10 py-8 text-xl rounded-3xl bg-white border-zinc-200 hover:bg-zinc-50 text-zinc-900 font-bold shadow-xl shadow-zinc-100">
+              <Icons.Users className="w-6 h-6 text-indigo-500" />
+              Choose a Coach
             </Button>
           </div>
-          <div className="flex items-center gap-6">
+          
+          <div className="flex items-center gap-8 py-4 px-8 bg-white/50 backdrop-blur-sm rounded-2xl border border-zinc-100 shadow-sm">
+            <button onClick={onGoToHistory} className="flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-indigo-600 transition-colors">
+              <Icons.Clock className="w-4 h-4" />
+              History
+            </button>
+            <div className="w-px h-4 bg-zinc-200" />
+            <button onClick={onGoToPayment} className="flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-indigo-600 transition-colors">
+              <Icons.Wallet className="w-4 h-4" />
+              Billing
+            </button>
+          </div>
+
+          <div className="flex items-center gap-6 pt-4">
             <p className="text-sm text-zinc-400 font-medium flex items-center gap-2">
               <Icons.Clock className="w-4 h-4" />
               Wait time: <span className="text-zinc-900 font-bold">~2 mins</span>
@@ -112,16 +123,9 @@ const StudentHome: React.FC<StudentHomeProps> = ({
       <section className="space-y-6">
         <div className="flex justify-between items-end px-2">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">My Bookings</h2>
-            <p className="text-zinc-500 text-sm">Your upcoming sessions and requests.</p>
+            <h2 className="text-2xl font-bold text-zinc-900 tracking-tight">Upcoming Sessions</h2>
+            <p className="text-zinc-500 text-sm">Your scheduled practice times.</p>
           </div>
-          <button 
-            onClick={onGoToBookings}
-            className="text-indigo-600 text-sm font-bold hover:underline px-4 py-2 bg-indigo-50 rounded-full transition-colors flex items-center gap-2"
-          >
-            View all bookings
-            <Icons.ArrowRight className="w-4 h-4" />
-          </button>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
@@ -144,128 +148,68 @@ const StudentHome: React.FC<StudentHomeProps> = ({
         </div>
       </section>
 
-      {/* Optional Starters Section */}
-      <section className="space-y-10 relative" id="daily-contexts">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 px-2">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge color="zinc" variant="outline" className="bg-zinc-50/50 border-zinc-100 text-[10px] uppercase tracking-widest font-bold">
-                Optional Starters
-              </Badge>
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Need help starting?</span>
+      {/* Optional Starters Section - Light Inspiration */}
+      <section className="space-y-6 px-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-zinc-50 rounded-xl flex items-center justify-center border border-zinc-100">
+              <Icons.Sparkles className="w-4 h-4 text-zinc-300" />
             </div>
-            <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">
-              Conversation Starters
-            </h2>
-            <p className="text-zinc-500 text-lg">
-              Pick a topic to anchor your session, or just skip and talk about anything.
-            </p>
+            <div>
+              <h2 className="text-sm font-bold text-zinc-900 uppercase tracking-widest">Inspiration <span className="text-zinc-400 font-normal">(Optional Starters)</span></h2>
+              <p className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">Pick a topic to start, or just jump into an open conversation.</p>
+            </div>
           </div>
           <button 
             onClick={() => setIsViewAll(!isViewAll)}
-            className="text-zinc-500 text-sm font-bold hover:text-zinc-900 px-6 py-3 bg-zinc-100 rounded-2xl transition-all hover:bg-zinc-200 flex items-center gap-2"
+            className="text-[10px] font-bold text-zinc-400 hover:text-indigo-600 transition-colors uppercase tracking-widest"
           >
-            {isViewAll ? 'Show less' : 'Browse all starters'}
-            <Icons.ArrowRight className={`w-4 h-4 transition-transform ${isViewAll ? '-rotate-90' : ''}`} />
+            {isViewAll ? 'Show less' : 'Browse all'}
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex flex-wrap gap-2">
           <AnimatePresence mode="popLayout">
-            {displayedScenarios.length > 0 ? (
-              displayedScenarios.map((scenario) => (
-                <motion.div
-                  key={scenario.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
+            {/* Open Conversation - The explicit default */}
+            <motion.div layout>
+              <button 
+                onClick={() => setSelectedContextId(null)}
+                className={`px-5 py-2.5 rounded-xl border-2 transition-all flex items-center gap-2.5 ${
+                  selectedContextId === null 
+                    ? 'border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm' 
+                    : 'border-zinc-100 bg-white text-zinc-500 hover:border-zinc-200'
+                }`}
+              >
+                <Icons.MessageSquare className={`w-3.5 h-3.5 ${selectedContextId === null ? 'text-indigo-600' : 'text-zinc-300'}`} />
+                <span className="text-xs font-bold">Open Conversation</span>
+              </button>
+            </motion.div>
+
+            {displayedScenarios.map((scenario) => (
+              <motion.div
+                key={scenario.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+              >
+                <button 
+                  onClick={() => setSelectedContextId(scenario.id)}
+                  className={`px-5 py-2.5 rounded-xl border-2 transition-all flex items-center gap-2.5 ${
+                    selectedContextId === scenario.id 
+                      ? 'border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm' 
+                      : 'border-zinc-100 bg-white text-zinc-500 hover:border-zinc-200'
+                  }`}
                 >
-                  <Card 
-                    onClick={() => setSelectedContextId(scenario.id)}
-                    className={`group cursor-pointer transition-all duration-500 relative overflow-hidden h-full flex flex-col border-2 ${
-                      selectedContextId === scenario.id 
-                        ? 'border-indigo-500 ring-4 ring-indigo-500/10 bg-indigo-50/30' 
-                        : 'hover:border-indigo-200 border-zinc-100 grayscale opacity-60 hover:grayscale-0 hover:opacity-100'
-                    }`}
-                  >
-                    {scenario.recommendationTag && (
-                      <div className="absolute top-0 right-0">
-                        <div className="bg-indigo-600 text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-bl-xl shadow-sm">
-                          {scenario.recommendationTag}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="space-y-6 flex-1">
-                      <div className="flex justify-between items-start">
-                        <Badge color={selectedContextId === scenario.id ? 'indigo' : 'zinc'}>
-                          {scenario.level}
-                        </Badge>
-                        <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">
-                          {scenario.duration}
-                        </span>
-                      </div>
-
-                      <div className="space-y-2">
-                        <h3 className="text-2xl font-bold text-zinc-900 leading-tight">
-                          {scenario.chineseTitle} 
-                          <span className="block text-zinc-400 text-lg font-medium mt-0.5">{scenario.title}</span>
-                        </h3>
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="flex items-start gap-2 text-zinc-600">
-                          <div className="mt-1 p-1 bg-emerald-100 rounded-full">
-                            <Icons.Check className="w-3 h-3 text-emerald-600" />
-                          </div>
-                          <p className="text-sm font-medium leading-snug">
-                            <span className="text-zinc-400 font-bold text-[10px] uppercase block mb-0.5">Your Goal</span>
-                            {scenario.outcome}
-                          </p>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 pt-2">
-                          {scenario.keywords.map((kw, idx) => (
-                            <span key={idx} className="px-2 py-1 bg-zinc-100 text-zinc-500 text-[10px] font-bold rounded-lg border border-zinc-200/50">
-                              {kw}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-8 pt-6 border-t border-zinc-100 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                          {scenario.activeCoaches} coaches available
-                        </span>
-                      </div>
-                      <div className={`p-2 rounded-xl transition-colors ${selectedContextId === scenario.id ? 'bg-indigo-600 text-white' : 'bg-zinc-50 text-zinc-400 group-hover:bg-indigo-50 group-hover:text-indigo-600'}`}>
-                        <Icons.Check className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))
-            ) : (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="col-span-full py-20 text-center">
-                <p className="text-zinc-400">No contexts available for your current level. Try changing your goal!</p>
-              </motion.div>
-            )}
-            {!isViewAll && (
-              <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <Card className="flex flex-col items-center justify-center border-dashed border-2 border-zinc-200 bg-zinc-50/50 text-center cursor-pointer hover:bg-zinc-100 transition-all h-full min-h-[320px]">
-                  <div className="p-5 bg-white rounded-2xl shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                    <Icons.Sparkles className="w-8 h-8 text-indigo-500" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold">{scenario.chineseTitle}</span>
+                    <Badge color={selectedContextId === scenario.id ? 'indigo' : 'zinc'} className="text-[8px] px-1 py-0 opacity-70">
+                      {scenario.level}
+                    </Badge>
                   </div>
-                  <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Open Conversation</h3>
-                  <p className="text-zinc-400 text-sm px-12 mt-2 leading-relaxed">No topic, no plan. Just start talking and see where it goes.</p>
-                  <Button onClick={onStartSession} variant="ghost" className="mt-6 text-indigo-600 font-bold">Start Open Chat</Button>
-                </Card>
+                </button>
               </motion.div>
-            )}
+            ))}
           </AnimatePresence>
         </div>
 
