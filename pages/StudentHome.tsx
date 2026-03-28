@@ -74,30 +74,37 @@ const StudentHome: React.FC<StudentHomeProps> = ({
           </div>
           
           <h1 className="text-6xl font-bold text-zinc-900 tracking-tight leading-tight">
-            Build confidence, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">one chat at a time.</span>
+            Ready to <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">open your mouth?</span>
           </h1>
           <p className="text-zinc-500 text-xl max-w-2xl mx-auto leading-relaxed">
-            Short, 15-minute spoken Chinese sessions with friendly native speakers. 
-            No grades, no textbooks, just human connection.
+            Connect with a supportive native coach for a live, 1:1 conversation. 
+            No pressure, no curriculum—just real speaking practice.
           </p>
         </div>
         
         <div className="flex flex-col items-center gap-6">
           <div className="flex flex-wrap justify-center gap-4">
-            <Button onClick={onStartSession} className="px-12 py-6 text-lg rounded-2xl">
-              <Icons.Mic />
-              Start practicing
+            <Button onClick={onStartSession} className="px-12 py-6 text-lg rounded-2xl shadow-xl shadow-indigo-100 hover:scale-[1.02] transition-all">
+              <Icons.Mic className="w-5 h-5" />
+              Start Live Conversation
             </Button>
-            <Button onClick={onGoToPayment} variant="secondary" className="px-8 py-6 text-lg rounded-2xl">
-              Manage Plan
-            </Button>
-            <Button onClick={onGoToHistory} variant="secondary" className="px-8 py-6 text-lg rounded-2xl bg-white border-zinc-200 hover:bg-zinc-50">
-              <Icons.Sparkles className="w-5 h-5 text-indigo-500" />
-              History
+            <Button onClick={onGoToBookings} variant="secondary" className="px-8 py-6 text-lg rounded-2xl bg-white border-zinc-200 hover:bg-zinc-50">
+              <Icons.Calendar className="w-5 h-5 text-indigo-500" />
+              Book a Coach
             </Button>
           </div>
-          <p className="text-sm text-zinc-400 font-medium">Wait time: <span className="text-zinc-900 font-bold underline underline-offset-4 decoration-indigo-200">~2 mins</span> • Voice only</p>
+          <div className="flex items-center gap-6">
+            <p className="text-sm text-zinc-400 font-medium flex items-center gap-2">
+              <Icons.Clock className="w-4 h-4" />
+              Wait time: <span className="text-zinc-900 font-bold">~2 mins</span>
+            </p>
+            <div className="w-px h-4 bg-zinc-200" />
+            <p className="text-sm text-zinc-400 font-medium flex items-center gap-2">
+              <Icons.ShieldCheck className="w-4 h-4" />
+              Voice-only privacy
+            </p>
+          </div>
         </div>
       </div>
 
@@ -137,30 +144,28 @@ const StudentHome: React.FC<StudentHomeProps> = ({
         </div>
       </section>
 
-      {/* Context Packs Section */}
+      {/* Optional Starters Section */}
       <section className="space-y-10 relative" id="daily-contexts">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 px-2">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Badge color="indigo" variant="outline" className="bg-indigo-50/50 border-indigo-100 text-[10px] uppercase tracking-widest font-bold">
-                Level: HSK 3
+              <Badge color="zinc" variant="outline" className="bg-zinc-50/50 border-zinc-100 text-[10px] uppercase tracking-widest font-bold">
+                Optional Starters
               </Badge>
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Based on your recent practice</span>
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Need help starting?</span>
             </div>
             <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">
-              {isViewAll ? 'Browse all contexts' : 'Recommended for you'}
+              Conversation Starters
             </h2>
             <p className="text-zinc-500 text-lg">
-              {isViewAll 
-                ? 'Explore our full library of real-life conversation scenarios.' 
-                : 'Choose a real-life scenario to anchor your conversation and build confidence.'}
+              Pick a topic to anchor your session, or just skip and talk about anything.
             </p>
           </div>
           <button 
             onClick={() => setIsViewAll(!isViewAll)}
-            className="text-indigo-600 text-sm font-bold hover:underline px-6 py-3 bg-indigo-50 rounded-2xl transition-all hover:bg-indigo-100 flex items-center gap-2"
+            className="text-zinc-500 text-sm font-bold hover:text-zinc-900 px-6 py-3 bg-zinc-100 rounded-2xl transition-all hover:bg-zinc-200 flex items-center gap-2"
           >
-            {isViewAll ? 'Show recommendations' : 'Browse all contexts'}
+            {isViewAll ? 'Show less' : 'Browse all starters'}
             <Icons.ArrowRight className={`w-4 h-4 transition-transform ${isViewAll ? '-rotate-90' : ''}`} />
           </button>
         </div>
@@ -179,10 +184,10 @@ const StudentHome: React.FC<StudentHomeProps> = ({
                 >
                   <Card 
                     onClick={() => setSelectedContextId(scenario.id)}
-                    className={`group cursor-pointer transition-all duration-300 relative overflow-hidden h-full flex flex-col border-2 ${
+                    className={`group cursor-pointer transition-all duration-500 relative overflow-hidden h-full flex flex-col border-2 ${
                       selectedContextId === scenario.id 
                         ? 'border-indigo-500 ring-4 ring-indigo-500/10 bg-indigo-50/30' 
-                        : 'hover:border-indigo-200 border-zinc-100'
+                        : 'hover:border-indigo-200 border-zinc-100 grayscale opacity-60 hover:grayscale-0 hover:opacity-100'
                     }`}
                   >
                     {scenario.recommendationTag && (
@@ -233,19 +238,12 @@ const StudentHome: React.FC<StudentHomeProps> = ({
 
                     <div className="mt-8 pt-6 border-t border-zinc-100 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="flex -space-x-2">
-                          {[1, 2, 3].map(i => (
-                            <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-zinc-100 overflow-hidden shadow-sm">
-                              <img src={`https://i.pravatar.cc/100?img=${i + 15}`} alt="avatar" referrerPolicy="no-referrer" />
-                            </div>
-                          ))}
-                        </div>
                         <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                          {scenario.activeCoaches} coaches ready
+                          {scenario.activeCoaches} coaches available
                         </span>
                       </div>
                       <div className={`p-2 rounded-xl transition-colors ${selectedContextId === scenario.id ? 'bg-indigo-600 text-white' : 'bg-zinc-50 text-zinc-400 group-hover:bg-indigo-50 group-hover:text-indigo-600'}`}>
-                        <Icons.ArrowRight className="w-4 h-4" />
+                        <Icons.Check className="w-4 h-4" />
                       </div>
                     </div>
                   </Card>
@@ -262,9 +260,9 @@ const StudentHome: React.FC<StudentHomeProps> = ({
                   <div className="p-5 bg-white rounded-2xl shadow-sm mb-4 group-hover:scale-110 transition-transform">
                     <Icons.Sparkles className="w-8 h-8 text-indigo-500" />
                   </div>
-                  <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Surprise Me</h3>
-                  <p className="text-zinc-400 text-sm px-12 mt-2 leading-relaxed">Let your coach propose a creative scenario based on your level.</p>
-                  <Button variant="ghost" className="mt-6 text-indigo-600 font-bold">Try it now</Button>
+                  <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Open Conversation</h3>
+                  <p className="text-zinc-400 text-sm px-12 mt-2 leading-relaxed">No topic, no plan. Just start talking and see where it goes.</p>
+                  <Button onClick={onStartSession} variant="ghost" className="mt-6 text-indigo-600 font-bold">Start Open Chat</Button>
                 </Card>
               </motion.div>
             )}

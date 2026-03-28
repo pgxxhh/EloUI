@@ -130,6 +130,7 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
   const [status, setStatus] = useState<PaymentStatus>('IDLE');
   const [progress, setProgress] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState<PaymentHistoryItem[]>(MOCK_HISTORY);
   
   // Checkout state
   const [checkoutType, setCheckoutType] = useState<'NONE' | 'SUBSCRIPTION' | 'ADDON'>('NONE');
@@ -616,14 +617,26 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
 
         {/* History Section */}
         <div className="space-y-4 pt-8 border-t border-zinc-100">
-          <button 
-            onClick={() => setShowHistory(!showHistory)}
-            className="flex items-center gap-3 text-zinc-400 hover:text-zinc-900 transition-colors font-bold text-[10px] uppercase tracking-[0.2em] ml-1"
-          >
-            <HistoryIcon className="w-4 h-4" />
-            Billing history
-            {showHistory ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          </button>
+          <div className="flex items-center justify-between">
+            <button 
+              onClick={() => setShowHistory(!showHistory)}
+              className="flex items-center gap-3 text-zinc-400 hover:text-zinc-900 transition-colors font-bold text-[10px] uppercase tracking-[0.2em] ml-1"
+            >
+              <HistoryIcon className="w-4 h-4" />
+              Billing history
+              {showHistory ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
+
+            {/* Demo toggle for history state */}
+            {showHistory && (
+              <button 
+                onClick={() => setHistory(history.length > 0 ? [] : MOCK_HISTORY)}
+                className="text-[10px] font-bold text-indigo-500 hover:text-indigo-600 transition-colors uppercase tracking-widest px-3 py-1 bg-indigo-50 rounded-full"
+              >
+                Demo: {history.length > 0 ? 'Clear' : 'Restore'} History
+              </button>
+            )}
+          </div>
 
           <AnimatePresence>
             {showHistory && (
@@ -634,26 +647,40 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
                 className="overflow-hidden"
               >
                 <div className="bg-white border border-zinc-100 rounded-[2rem] overflow-hidden shadow-sm">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="border-b border-zinc-50">
-                          <th className="px-8 py-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Date</th>
-                          <th className="px-8 py-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Description</th>
-                          <th className="px-8 py-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-zinc-50">
-                        {MOCK_HISTORY.map((item, i) => (
-                          <tr key={i} className="group hover:bg-zinc-50/50 transition-colors">
-                            <td className="px-8 py-5 text-sm font-bold text-zinc-500">{item.date}</td>
-                            <td className="px-8 py-5 text-sm font-bold text-zinc-900">{item.description}</td>
-                            <td className="px-8 py-5 text-sm font-bold text-zinc-900">{item.amount}</td>
+                  {history.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-zinc-50">
+                            <th className="px-8 py-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Date</th>
+                            <th className="px-8 py-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Description</th>
+                            <th className="px-8 py-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Amount</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-50">
+                          {history.map((item, i) => (
+                            <tr key={i} className="group hover:bg-zinc-50/50 transition-colors">
+                              <td className="px-8 py-5 text-sm font-bold text-zinc-500">{item.date}</td>
+                              <td className="px-8 py-5 text-sm font-bold text-zinc-900">{item.description}</td>
+                              <td className="px-8 py-5 text-sm font-bold text-zinc-900">{item.amount}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="p-16 flex flex-col items-center justify-center text-center space-y-4">
+                      <div className="w-16 h-16 bg-zinc-50 rounded-[2rem] flex items-center justify-center text-zinc-300">
+                        <HistoryIcon className="w-8 h-8" />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-sm font-bold text-zinc-900">No billing history yet</h3>
+                        <p className="text-xs text-zinc-500 max-w-[240px] leading-relaxed mx-auto">
+                          Your future transactions, plan renewals, and add-on purchases will appear here.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}

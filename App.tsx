@@ -305,20 +305,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Design Rationale (Developer/Designer Sidebar) */}
-      <div className="fixed bottom-6 right-6 group z-50">
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-zinc-900 text-white text-[10px] p-6 rounded-2xl w-64 shadow-2xl mb-4 pointer-events-none border border-zinc-800">
-          <h4 className="font-bold uppercase tracking-widest text-indigo-400 mb-2">Design Rationale</h4>
-          <ul className="space-y-2 list-disc pl-3 leading-relaxed">
-            <li><span className="font-bold text-white">Soft HUD:</span> Using zinc-900 for session interface to reduce peripheral distractions.</li>
-            <li><span className="font-bold text-white">FOMO/Urgency:</span> Coach invitations use real-time countdowns to optimize matching speed.</li>
-            <li><span className="font-bold text-white">Trust Layers:</span> Skeleton screens and detailed AI feedback justify the "value" of each session.</li>
-          </ul>
-        </div>
-        <div className="w-12 h-12 bg-zinc-900 text-white rounded-full flex items-center justify-center cursor-help shadow-lg">
-          ?
-        </div>
-      </div>
     </Layout>
   );
 };
