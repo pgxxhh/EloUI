@@ -197,6 +197,7 @@ const COACH_STEPS: AICoachStep[] = [
 ];
 
 const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }> = ({ sessionId, onBack }) => {
+  const [reviewStatus, setReviewStatus] = useState<'LOADING' | 'READY' | 'FAILED' | 'NO_RECORDING'>('LOADING');
   const [selectedLineId, setSelectedLineId] = useState<string | null>('t5');
   const [activeStep, setActiveStep] = useState<AICoachStep['id']>('REVIEW');
   const [activeTab, setActiveTab] = useState<TabType>('Transcript');
@@ -207,6 +208,19 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
   const [showFullTranscript, setShowFullTranscript] = useState(false);
   const totalDuration = 300;
   const transcriptRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Simulate AI report generation
+    const timer = setTimeout(() => {
+      // If no session ID, simulate no recording
+      if (!sessionId && Math.random() > 0.9) {
+        setReviewStatus('NO_RECORDING');
+      } else {
+        setReviewStatus('READY');
+      }
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [sessionId]);
 
   const selectedLine = MOCK_TRANSCRIPT.find(l => l.id === selectedLineId);
 
@@ -251,8 +265,8 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               <RotateCcw className="w-4 h-4 text-zinc-500" />
             </button>
             <div className="space-y-0.5">
-              <h1 className="text-base md:text-lg font-bold text-zinc-900">Session #12: Workplace Archive</h1>
-              <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">Session Archive Workspace</p>
+              <h1 className="text-base md:text-lg font-bold text-zinc-900">Speaking Debrief</h1>
+              <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">Conversation Archive Workspace</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -268,61 +282,130 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
       </nav>
 
       <main className="max-w-[1600px] mx-auto px-4 md:px-8 py-6 md:py-10">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
-          
-          {/* LEFT: Player Anchor (Sticky on Desktop) */}
-          <div className="w-full lg:w-[380px] lg:sticky lg:top-28 space-y-6">
-            <Card className="p-6 md:p-8 bg-white border-zinc-100 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden relative group">
-              <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em]">Session Recording</p>
-                  <h3 className="text-lg font-bold text-zinc-900 leading-tight">Workplace Small Talk & Formalities</h3>
+        <AnimatePresence mode="wait">
+          {reviewStatus === 'LOADING' ? (
+            <motion.div 
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
+            >
+              <div className="relative">
+                <div className="w-24 h-24 border-4 border-zinc-100 border-t-indigo-600 rounded-full animate-spin" />
+                <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-indigo-600 animate-pulse" />
+              </div>
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold text-zinc-900">Analyzing your conversation...</h2>
+                <p className="text-zinc-500 font-medium">AI is identifying key learning moments and generating your debrief.</p>
+              </div>
+            </motion.div>
+          ) : reviewStatus === 'FAILED' ? (
+            <motion.div 
+              key="failed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
+            >
+              <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-500">
+                <AlertCircle className="w-10 h-10" />
+              </div>
+              <div className="text-center space-y-4">
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-bold text-zinc-900">Failed to generate debrief</h2>
+                  <p className="text-zinc-500">Something went wrong while processing your session data.</p>
                 </div>
-
-                <div className="space-y-5">
-                  <div className="relative h-12 flex items-end gap-[2px]">
-                    {Array.from({ length: 40 }).map((_, i) => {
-                      const height = 20 + Math.random() * 80;
-                      const isPlayed = (currentTime / totalDuration) * 40 > i;
-                      return (
-                        <div 
-                          key={i} 
-                          className={`flex-1 rounded-full transition-all duration-300 ${
-                            isPlayed ? 'bg-indigo-600' : 'bg-zinc-100'
-                          }`}
-                          style={{ height: `${height}%` }}
-                        />
-                      );
-                    })}
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <button 
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-zinc-200"
-                      >
-                        {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
-                      </button>
-                      <div className="space-y-0.5">
-                        <p className="text-sm font-bold text-zinc-900">
-                          {Math.floor(currentTime / 60)}:{(currentTime % 60).toString().padStart(2, '0')}
-                        </p>
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">/ 05:00</p>
+                <Button onClick={() => setReviewStatus('LOADING')} variant="secondary" className="bg-zinc-900 text-white hover:bg-zinc-800">
+                  Retry Analysis
+                </Button>
+              </div>
+            </motion.div>
+          ) : reviewStatus === 'NO_RECORDING' ? (
+            <motion.div 
+              key="no-recording"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
+            >
+              <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center text-zinc-300">
+                <Mic2 className="w-10 h-10" />
+              </div>
+              <div className="text-center space-y-4">
+                <div className="space-y-1">
+                  <h2 className="text-2xl font-bold text-zinc-900">No recording found</h2>
+                  <p className="text-zinc-500">We couldn't find a recording for this session. This might happen if the session was too short.</p>
+                </div>
+                <Button onClick={onBack} variant="secondary" className="bg-zinc-900 text-white hover:bg-zinc-800">
+                  Back to Home
+                </Button>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="ready"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start"
+            >
+              {/* LEFT: Player Anchor (Sticky on Desktop) */}
+              <div className="w-full lg:w-[380px] lg:sticky lg:top-28 space-y-6">
+                <Card className="p-6 md:p-8 bg-white border-zinc-100 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden relative group">
+                  <div className="space-y-6">
+                    <div className="space-y-1.5">
+                      <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em]">Session Recording</p>
+                      <h3 className="text-lg font-bold text-zinc-900 leading-tight">Conversation with Lin Wang</h3>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Context:</span>
+                        <span className="text-[10px] font-bold text-zinc-600">Workplace Small Talk</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-400">
-                        <RotateCcw className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-400">
-                        <Volume2 className="w-4 h-4" />
-                      </button>
+
+                    <div className="space-y-5">
+                      <div className="relative h-12 flex items-end gap-[2px]">
+                        {Array.from({ length: 40 }).map((_, i) => {
+                          const height = 20 + Math.random() * 80;
+                          const isPlayed = (currentTime / totalDuration) * 40 > i;
+                          return (
+                            <div 
+                              key={i} 
+                              className={`flex-1 rounded-full transition-all duration-300 ${
+                                isPlayed ? 'bg-indigo-600' : 'bg-zinc-100'
+                              }`}
+                              style={{ height: `${height}%` }}
+                            />
+                          );
+                        })}
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <button 
+                            onClick={() => setIsPlaying(!isPlaying)}
+                            className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-zinc-200"
+                          >
+                            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
+                          </button>
+                          <div className="space-y-0.5">
+                            <p className="text-sm font-bold text-zinc-900">
+                              {Math.floor(currentTime / 60)}:{(currentTime % 60).toString().padStart(2, '0')}
+                            </p>
+                            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">/ 05:00</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-400">
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                          <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-400">
+                            <Volume2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </Card>
+                </Card>
 
             <div className="flex items-center justify-between px-6 py-4 bg-zinc-50/50 border border-zinc-100 rounded-3xl">
               <div className="flex items-center gap-3">
@@ -735,9 +818,29 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               )}
             </AnimatePresence>
           </div>
-        </div>
-      </main>
-    </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Bottom Action Bar */}
+    {reviewStatus === 'READY' && (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="mt-12 flex justify-center"
+      >
+        <Button 
+          onClick={onBack}
+          className="bg-zinc-900 text-white px-12 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl hover:bg-zinc-800 transition-all"
+        >
+          Complete Session
+          <ArrowRight className="w-5 h-5" />
+        </Button>
+      </motion.div>
+    )}
+  </main>
+</div>
   );
 };
 

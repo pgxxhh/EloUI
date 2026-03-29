@@ -27,6 +27,8 @@ import LessonReview from './pages/LessonReview';
 import PreCheck from './pages/PreCheck';
 import CoachEarnings from './pages/CoachEarnings';
 import SessionProcessing from './pages/SessionProcessing';
+import TrialSuccess from './pages/TrialSuccess';
+import PostTrialUpgrade from './pages/PostTrialUpgrade';
 import { Button } from './components/UI';
 import { SCENARIOS } from './constants';
 import { Icons } from './constants';
@@ -79,6 +81,10 @@ const App: React.FC = () => {
             onStart={() => handleAuthRedirect('STUDENT', 'SIGNUP')}
             onLogin={() => handleAuthRedirect('STUDENT', 'LOGIN')}
             onBecomeCoach={() => setView('COACH_LANDING')}
+            onTrialPurchase={() => {
+              setIsLoggedIn(true); // Simulate login for trial
+              setView('TRIAL_SUCCESS');
+            }}
           />
         );
       case 'STUDENT_HOME':
@@ -139,7 +145,25 @@ const App: React.FC = () => {
       case 'REVIEW':
         return <Review onReturnHome={() => setView('STUDENT_HOME')} />;
       case 'LESSON_REVIEW':
-        return <LessonReview onBack={() => setView('STUDENT_HOME')} />;
+        return <LessonReview onBack={() => setView('POST_TRIAL_UPGRADE')} />;
+      case 'TRIAL_SUCCESS':
+        return (
+          <TrialSuccess 
+            onStartNow={() => setView('FIND_COACH')}
+            onScheduleLater={() => setView('STUDENT_HOME')}
+            onViewDashboard={() => setView('STUDENT_HOME')}
+          />
+        );
+      case 'POST_TRIAL_UPGRADE':
+        return (
+          <PostTrialUpgrade 
+            onUpgrade={(planId) => {
+              console.log('Upgrading to:', planId);
+              setView('BILLING');
+            }}
+            onMaybeLater={() => setView('STUDENT_HOME')}
+          />
+        );
       case 'COACH_DASHBOARD':
         return <CoachDashboard />;
       case 'COACH_LANDING':

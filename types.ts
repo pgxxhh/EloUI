@@ -28,7 +28,9 @@ export type AppView =
   | 'LESSON_REVIEW'
   | 'PRE_CHECK'
   | 'COACH_EARNINGS'
-  | 'EMAIL_VERIFICATION';
+  | 'EMAIL_VERIFICATION'
+  | 'TRIAL_SUCCESS'
+  | 'POST_TRIAL_UPGRADE';
 
 export type EarningStatus = 'SETTLED_UNPAID' | 'IN_PAYOUT' | 'PAID';
 export type PayoutStatus = 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED';

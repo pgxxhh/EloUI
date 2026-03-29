@@ -75,8 +75,8 @@ const History: React.FC<HistoryProps> = ({ onBack, onSelectSession }) => {
     <div className="max-w-4xl mx-auto space-y-8 py-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Learning Journey</h2>
-          <p className="text-zinc-500">Your past conversations and growth milestones.</p>
+          <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Conversation Archive</h2>
+          <p className="text-zinc-500">Review your past sessions and track your speaking growth.</p>
         </div>
         <Button variant="secondary" onClick={onBack} className="rounded-xl">
           <Icons.ArrowRight className="rotate-180" />
@@ -98,13 +98,14 @@ const History: React.FC<HistoryProps> = ({ onBack, onSelectSession }) => {
                 </div>
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <h3 className="font-bold text-zinc-900 text-lg">{session.scenarioTitle}</h3>
-                    <Badge color="indigo">{session.duration}</Badge>
+                    <h3 className="font-bold text-zinc-900 text-lg">Session with {session.coachName}</h3>
+                    <Badge color="zinc" className="bg-zinc-100 border-zinc-200 text-zinc-600">{session.duration}</Badge>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-zinc-400">
                     <span className="flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-zinc-300"></div>
-                      With {session.coachName}
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Starter:</span>
+                      <span className="font-medium text-zinc-600">{session.scenarioTitle || 'Open Conversation'}</span>
                     </span>
                     <span className="flex items-center gap-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-zinc-300"></div>

@@ -8,9 +8,10 @@ interface LandingProps {
   onStart: () => void;
   onLogin: () => void;
   onBecomeCoach: () => void;
+  onTrialPurchase: () => void;
 }
 
-const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) => {
+const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTrialPurchase }) => {
   return (
     <div className="bg-white text-zinc-900 font-sans selection:bg-indigo-100">
       {/* Top Navigation */}
@@ -46,10 +47,10 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Badge color="indigo" className="mb-6">Live 1:1 Spoken Chinese</Badge>
+              <Badge color="indigo" className="mb-6">First Session: $4.9</Badge>
               <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight text-zinc-900">
-                Speak Chinese <br />
-                <span className="text-indigo-600">with real people.</span>
+                Stop studying. <br />
+                <span className="text-indigo-600">Start speaking.</span>
               </h1>
             </motion.div>
             
@@ -59,7 +60,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-xl md:text-2xl text-zinc-500 leading-relaxed max-w-2xl"
             >
-              The most effective way to build fluency is to open your mouth. Practice live with supportive native-speaking coaches who help you find your voice.
+              Connect with a native coach for a 15-minute live conversation. No curriculum, no pressure—just real practice.
             </motion.p>
 
             <motion.div 
@@ -69,12 +70,12 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               className="space-y-8 pt-4"
             >
               <div className="flex flex-col sm:flex-row items-center gap-4">
-                <Button onClick={onStart} className="w-full sm:w-auto px-10 py-6 text-lg rounded-2xl shadow-xl shadow-indigo-100 hover:scale-[1.02] transition-all">
-                  Start Speaking Now
+                <Button onClick={onStart} className="w-full sm:w-auto px-10 py-6 text-lg rounded-2xl shadow-xl shadow-indigo-100 hover:scale-[1.02] transition-all font-black">
+                  Book your first session — $4.9
                   <Icons.ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 <a href="#how-it-works" className="w-full sm:w-auto">
-                  <Button variant="ghost" className="w-full px-10 py-6 text-lg rounded-2xl border border-zinc-100 hover:bg-zinc-50">
+                  <Button variant="ghost" className="w-full px-10 py-6 text-lg rounded-2xl border border-zinc-100 hover:bg-zinc-50 font-bold">
                     How it works
                   </Button>
                 </a>
@@ -83,11 +84,11 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               <div className="flex flex-wrap items-center gap-x-10 gap-y-4 text-zinc-400">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="text-sm font-medium text-zinc-600">Live native coaches available</span>
+                  <span className="text-sm font-bold text-zinc-600">No subscription required</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Icons.Mic className="w-4 h-4 text-indigo-500" />
-                  <span className="text-sm font-medium text-zinc-600">Voice-only practice</span>
+                  <Icons.Check className="w-4 h-4 text-indigo-500" />
+                  <span className="text-sm font-bold text-zinc-600">One-time payment</span>
                 </div>
               </div>
             </motion.div>
@@ -273,15 +274,76 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
 
 
 
-      {/* Pricing Section - Real Plans */}
+      {/* Pricing Section - Trial Focused */}
       <section id="pricing" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900">Simple, conversation-based pricing.</h2>
-            <p className="text-lg text-zinc-500">Choose the plan that fits your speaking goals.</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900">Simple, transparent pricing.</h2>
+            <p className="text-lg text-zinc-500">Start with a trial, then choose a plan to keep growing.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Trial Lesson Card - Primary Path */}
+          <div className="max-w-4xl mx-auto mb-20">
+            <Card className="p-8 md:p-12 border-2 border-indigo-600 bg-indigo-50/30 rounded-[3rem] relative overflow-hidden flex flex-col md:flex-row items-center gap-12 shadow-2xl shadow-indigo-100">
+              <div className="absolute top-6 right-6 bg-indigo-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] text-white">Best to Start</div>
+              
+              <div className="flex-1 space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-3xl font-black text-zinc-900">15-Minute Intro Session</h3>
+                  <p className="text-zinc-500 font-medium">The perfect way to experience Elo for the first time. No strings attached.</p>
+                </div>
+                
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <li className="flex items-center gap-3 text-sm font-bold text-zinc-700">
+                    <div className="w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center">
+                      <Icons.Check className="w-3 h-3 text-white" />
+                    </div>
+                    1-on-1 with native coach
+                  </li>
+                  <li className="flex items-center gap-3 text-sm font-bold text-zinc-700">
+                    <div className="w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center">
+                      <Icons.Check className="w-3 h-3 text-white" />
+                    </div>
+                    Full AI Speaking Debrief
+                  </li>
+                  <li className="flex items-center gap-3 text-sm font-bold text-zinc-700">
+                    <div className="w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center">
+                      <Icons.Check className="w-3 h-3 text-white" />
+                    </div>
+                    No auto-renewal
+                  </li>
+                  <li className="flex items-center gap-3 text-sm font-bold text-zinc-700">
+                    <div className="w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center">
+                      <Icons.Check className="w-3 h-3 text-white" />
+                    </div>
+                    Valid for any topic
+                  </li>
+                </ul>
+
+                <div className="pt-4 border-t border-indigo-100 flex items-center gap-4">
+                  <Icons.Sparkles className="w-5 h-5 text-indigo-600" />
+                  <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest">100% Satisfaction Guarantee</p>
+                </div>
+              </div>
+
+              <div className="w-full md:w-72 space-y-4 text-center">
+                <div className="space-y-1">
+                  <span className="text-zinc-400 text-sm line-through font-bold">$25</span>
+                  <div className="text-6xl font-black text-zinc-900">$4.9</div>
+                  <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">One-time payment</span>
+                </div>
+                <Button onClick={onTrialPurchase} className="w-full py-6 text-lg rounded-2xl shadow-xl shadow-indigo-200 font-black">
+                  Get Started Now
+                </Button>
+              </div>
+            </Card>
+          </div>
+
+          <div className="text-center mb-12">
+            <p className="text-sm font-bold text-zinc-400 uppercase tracking-[0.2em]">Already tried Elo? Choose a plan to keep growing.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto opacity-80 hover:opacity-100 transition-opacity">
             {/* Elo Lite */}
             <Card className="p-8 border-2 border-zinc-100 rounded-[2.5rem] space-y-6 hover:border-indigo-100 transition-all flex flex-col shadow-sm">
               <div className="space-y-2">
@@ -294,17 +356,16 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               </div>
               <ul className="space-y-3 text-zinc-600 flex-1">
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> 4 lessons per cycle</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> 120 total minutes · 30m baseline</li>
+                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> 120 total minutes</li>
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Roll over up to 30 mins</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Valid for 7 days</li>
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Standard AI review</li>
               </ul>
               <Button onClick={onStart} variant="secondary" className="w-full py-4 rounded-2xl border-zinc-200 font-bold text-sm">Start with Lite</Button>
             </Card>
 
             {/* Elo Plus */}
-            <Card className="p-8 border-2 border-indigo-600 bg-zinc-900 text-white rounded-[2.5rem] space-y-6 relative overflow-hidden flex flex-col shadow-2xl shadow-indigo-200/20">
-              <div className="absolute top-4 right-4 bg-indigo-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Recommended</div>
+            <Card className="p-8 border-2 border-zinc-900 bg-zinc-900 text-white rounded-[2.5rem] space-y-6 relative overflow-hidden flex flex-col shadow-2xl shadow-indigo-200/20">
+              <div className="absolute top-4 right-4 bg-indigo-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Most Popular</div>
               <div className="space-y-2">
                 <h3 className="text-xl font-bold">Elo Plus</h3>
                 <div className="flex items-baseline gap-1">
@@ -315,9 +376,8 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               </div>
               <ul className="space-y-3 text-zinc-300 flex-1">
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-400" /> 8 lessons per cycle</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-400" /> 240 total minutes · 30m baseline</li>
+                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-400" /> 240 total minutes</li>
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-400" /> Roll over up to 30 mins</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-400" /> Valid for 7 days</li>
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-400" /> Enhanced AI review</li>
               </ul>
               <Button onClick={onStart} className="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 border-none font-bold text-sm">Join Elo Plus</Button>
@@ -335,10 +395,9 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
               </div>
               <ul className="space-y-3 text-zinc-600 flex-1">
                 <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> 12 lessons per cycle</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> 360 total minutes · 30m baseline</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Roll over up to 30 mins</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Valid for 7 days</li>
-                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Priority coach matching included</li>
+                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> 360 total minutes</li>
+                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Priority coach matching</li>
+                <li className="flex items-center gap-3 text-xs font-medium"><Icons.Check className="w-4 h-4 text-indigo-600" /> Advanced AI analytics</li>
               </ul>
               <Button onClick={onStart} variant="secondary" className="w-full py-4 rounded-2xl border-zinc-200 font-bold text-sm">Start Intensive</Button>
             </Card>
@@ -372,7 +431,6 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
         </div>
       </section>
 
-
       {/* CTA Reinforcement - Direct */}
       <section className="py-32 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -382,13 +440,13 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
                 Start speaking today.
               </h2>
               <p className="text-xl md:text-2xl text-indigo-100 leading-relaxed">
-                Choose your plan and enter your first live session. Build confidence through real conversation.
+                Book your first 15-minute session for just $4.9. No subscription required.
               </p>
             </div>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
               <Button onClick={onStart} variant="secondary" className="w-full sm:w-auto px-12 py-8 text-xl rounded-[2rem] bg-white text-indigo-600 hover:bg-zinc-50 hover:scale-[1.02] transition-all shadow-xl font-black">
-                Choose a Plan
+                Book My Session — $4.9
                 <Icons.ArrowRight className="w-6 h-6 ml-2" />
               </Button>
             </div>
@@ -403,6 +461,49 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach }) =>
                 Native-speaking coaches
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-zinc-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-3xl font-bold tracking-tight">Common Questions</h2>
+            <p className="text-zinc-500">Everything you need to know about starting your journey with Elo.</p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "Who is the trial lesson for?",
+                a: "The trial lesson is for anyone who wants to practice Chinese but isn't ready for a long-term commitment. Whether you're a beginner or an advanced learner, it's the lowest-cost way to try Elo."
+              },
+              {
+                q: "Will I be charged automatically after the trial?",
+                a: "Absolutely not. The trial lesson is a one-time purchase. You will only be charged if you explicitly choose to join one of our monthly plans later."
+              },
+              {
+                q: "What's the difference between a trial and a subscription?",
+                a: "A trial is a single 15-minute experience with a native coach and full AI debrief. Subscriptions offer longer sessions (30-60 mins) and a lower price per minute for regular practice."
+              },
+              {
+                q: "I'm shy. Is talking to a real person stressful?",
+                a: "Don't worry! Our coaches are specially trained to break the ice. If you're not ready for video, Elo is voice-only by default, so you can practice as if you're calling a friend."
+              },
+              {
+                q: "How do I continue after my trial?",
+                a: "After your session, you'll receive your Speaking Debrief. From there, you can choose a plan that fits your goals or simply buy another extra lesson whenever you're ready."
+              }
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-6 rounded-2xl border border-zinc-100 space-y-3">
+                <h4 className="font-bold text-zinc-900 flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 text-xs">Q</div>
+                  {item.q}
+                </h4>
+                <p className="text-sm text-zinc-500 leading-relaxed pl-9">{item.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

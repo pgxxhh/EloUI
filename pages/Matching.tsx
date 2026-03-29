@@ -87,7 +87,7 @@ const Matching: React.FC<MatchingProps> = ({ onMatchFound, coachName = "your coa
 
       <div className="text-center space-y-6 max-w-sm animate-in slide-in-from-bottom-4 duration-500">
         <div className="space-y-2">
-          <Badge color={stage === 'WAITING' ? 'indigo' : 'green'} className="animate-pulse px-4 py-1">
+          <Badge color={stage === 'WAITING' ? 'indigo' : 'emerald'} className="animate-pulse px-6 py-2 text-xs font-black uppercase tracking-[0.2em] shadow-lg">
             {stage === 'WAITING' ? 'Stage A: Waiting for coach response' : 'Stage B: Connecting to coach'}
           </Badge>
           <h2 className={`text-3xl font-bold tracking-tight transition-colors duration-500 ${stage === 'WAITING' ? 'text-zinc-900' : 'text-emerald-700'}`}>
