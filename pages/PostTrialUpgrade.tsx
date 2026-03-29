@@ -42,22 +42,41 @@ const PostTrialUpgrade: React.FC<PostTrialUpgradeProps> = ({ onUpgrade, onMaybeL
       <div className="max-w-4xl mx-auto">
         
         {/* Achievement Hero */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-20">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-sm font-bold mb-6"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-3 px-5 py-2 bg-white border border-indigo-100 text-indigo-600 rounded-full text-[10px] font-black mb-10 uppercase tracking-[0.2em] shadow-sm"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-3.5 h-3.5" />
             First session: Done. Confidence: Built.
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 tracking-tight mb-6">
+          <h1 className="text-5xl md:text-7xl font-black text-zinc-900 tracking-tight mb-8 leading-[1.1]">
             That was a great start.
           </h1>
-          <p className="text-xl text-zinc-500 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-zinc-500 max-w-3xl mx-auto leading-relaxed mb-16">
             You just spoke more Chinese in 15 minutes than most learners do in a week. 
             Imagine where you'll be in a month.
           </p>
+
+          {/* Bento Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div className="p-8 bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm flex flex-col items-center gap-2">
+              <p className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.2em]">Fluency</p>
+              <p className="text-4xl font-black text-indigo-600">82%</p>
+              <p className="text-xs text-zinc-500 font-medium">+12% vs. Average</p>
+            </div>
+            <div className="p-8 bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm flex flex-col items-center gap-2">
+              <p className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.2em]">Accuracy</p>
+              <p className="text-4xl font-black text-indigo-600">74%</p>
+              <p className="text-xs text-zinc-500 font-medium">Strong Tones</p>
+            </div>
+            <div className="p-8 bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm flex flex-col items-center gap-2">
+              <p className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.2em]">New Words</p>
+              <p className="text-4xl font-black text-indigo-600">12</p>
+              <p className="text-xs text-zinc-500 font-medium">Ready to use</p>
+            </div>
+          </div>
         </div>
 
         {/* The "Speaking Snapshot" / Value Teaser */}
@@ -65,138 +84,145 @@ const PostTrialUpgrade: React.FC<PostTrialUpgradeProps> = ({ onUpgrade, onMaybeL
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="relative mb-16"
+          className="relative mb-20"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-50 z-10" />
-          <Card className="p-8 border-zinc-200 bg-white overflow-hidden">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">A</div>
+          <Card className="p-10 md:p-12 border-zinc-200 bg-white overflow-hidden rounded-[3rem] shadow-xl shadow-zinc-200/50">
+            <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-200">A</div>
                 <div>
-                  <p className="text-sm font-bold text-zinc-900">Your Speaking Debrief</p>
-                  <p className="text-xs text-zinc-400">Session #1 • Today</p>
+                  <p className="text-lg font-black text-zinc-900 tracking-tight">Your Speaking Debrief</p>
+                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Session #1 • Today</p>
                 </div>
               </div>
-              <Badge color="zinc">Preview</Badge>
+              <Badge color="indigo" className="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest">Premium Preview</Badge>
             </div>
             
-            <div className="space-y-4 blur-[2px] opacity-40 select-none">
-              <div className="h-4 bg-zinc-100 rounded w-3/4" />
-              <div className="h-4 bg-zinc-100 rounded w-1/2" />
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                <div className="h-24 bg-zinc-50 rounded-xl border border-zinc-100" />
-                <div className="h-24 bg-zinc-50 rounded-xl border border-zinc-100" />
-              </div>
-            </div>
-
-            <div className="absolute inset-0 flex items-center justify-center z-20">
-              <div className="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-white shadow-xl max-w-xs">
-                <Zap className="w-8 h-8 text-indigo-600 mx-auto mb-4" />
-                <p className="text-sm font-bold text-zinc-900 mb-2">Unlock your full analysis</p>
-                <p className="text-xs text-zinc-500">Get detailed feedback on tones, grammar, and vocabulary for every session.</p>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* The Momentum Reward Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-16"
-        >
-          <Card className="bg-zinc-900 text-white border-none shadow-2xl overflow-hidden relative p-8 md:p-12">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full -mr-32 -mt-32" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-              <div className="flex-1 text-center md:text-left">
-                <Badge className="bg-indigo-500/20 text-indigo-300 border-none mb-4 px-3 py-1">
-                  Trial Member Exclusive
-                </Badge>
-                <h3 className="text-3xl font-bold mb-4">Keep the momentum going.</h3>
-                <p className="text-zinc-400 text-lg mb-0">
-                  Subscribe in the next 24h and get <span className="text-white font-bold">30 extra minutes</span> added to your first month.
-                </p>
-              </div>
-              <div className="flex-shrink-0">
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
-                  <div className="flex items-center gap-2 text-indigo-400 mb-2">
-                    <Clock className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase tracking-widest">Expires in 23:59:59</span>
+            <div className="space-y-8 blur-[3px] opacity-30 select-none">
+              <div className="space-y-4">
+                <p className="text-xs font-black text-zinc-400 uppercase tracking-widest">Grammar Refinement</p>
+                <div className="p-6 bg-zinc-950 rounded-2xl border border-white/5 font-mono text-[11px] space-y-3 shadow-2xl relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent pointer-events-none" />
+                  <div className="flex gap-4 relative z-10">
+                    <span className="text-zinc-700">01</span>
+                    <p className="text-zinc-400">What you said: <span className="text-zinc-100">"我昨天去商店买苹果了。"</span></p>
                   </div>
-                  <p className="text-2xl font-bold text-white">+30 Mins</p>
-                  <p className="text-xs text-zinc-500">Trial Bonus Applied</p>
+                  <div className="flex gap-4 relative z-10">
+                    <span className="text-emerald-500/30">02</span>
+                    <p className="text-emerald-400 font-bold">Better version: "我昨天去商店买了一些苹果。"</p>
+                  </div>
+                  <div className="flex gap-4 relative z-10 opacity-50">
+                    <span className="text-zinc-700">03</span>
+                    <p className="text-zinc-500">Analysis: Added measure word "一些" for natural flow...</p>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="h-32 bg-zinc-50 rounded-3xl border border-zinc-100 flex items-center justify-center">
+                   <div className="w-2/3 h-2 bg-zinc-200 rounded-full" />
+                </div>
+                <div className="h-32 bg-zinc-50 rounded-3xl border border-zinc-100 flex items-center justify-center">
+                   <div className="w-1/2 h-2 bg-zinc-200 rounded-full" />
                 </div>
               </div>
             </div>
+
+            <div className="absolute inset-0 flex items-center justify-center z-20 bg-white/40 backdrop-blur-[2px]">
+              <div className="text-center p-10 bg-white rounded-[2.5rem] border border-white shadow-2xl max-w-sm">
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Zap className="w-8 h-8 text-indigo-600" />
+                </div>
+                <p className="text-xl font-black text-zinc-900 mb-3 tracking-tight">Unlock your full analysis</p>
+                <p className="text-zinc-500 text-sm leading-relaxed">Get detailed feedback on tones, grammar, and vocabulary for every session.</p>
+              </div>
+            </div>
           </Card>
         </motion.div>
+
 
         {/* Subscription Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {PLANS.map((plan) => (
-            <Card 
-              key={plan.id}
-              className={`p-6 flex flex-col ${plan.popular ? 'border-indigo-500 ring-1 ring-indigo-500 shadow-xl' : 'border-zinc-200'}`}
-            >
-              {plan.popular && (
-                <div className="mb-4">
-                  <Badge color="indigo">Most Popular</Badge>
-                </div>
-              )}
-              <h4 className="text-xl font-bold text-zinc-900 mb-1">{plan.name}</h4>
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-3xl font-bold text-zinc-900">{plan.price}</span>
-                <span className="text-zinc-400 text-sm">{plan.period}</span>
-              </div>
-              <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-zinc-600">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <Button 
-                onClick={() => onUpgrade(plan.id)}
-                variant={plan.popular ? 'primary' : 'outline'}
-                className="w-full py-4 rounded-xl font-bold"
+        <div className="mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {PLANS.map((plan) => (
+              <Card 
+                key={plan.id}
+                className={`p-8 flex flex-col rounded-[2.5rem] transition-all hover:shadow-2xl relative ${plan.popular ? 'border-indigo-600 shadow-[0_32px_64px_-12px_rgba(79,70,229,0.25)] scale-105 z-10 bg-white ring-4 ring-indigo-50' : 'border-zinc-200 bg-white/50 grayscale-[0.2]'}`}
               >
-                {plan.popular ? 'Unlock Full Access' : `Start with ${plan.name}`}
-              </Button>
-            </Card>
-          ))}
+                {plan.popular && (
+                  <>
+                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-black px-6 py-2 rounded-full uppercase tracking-[0.2em] shadow-lg whitespace-nowrap">
+                      +30m Bonus Included
+                    </div>
+                    <div className="flex items-center justify-between mb-6 pt-2">
+                      <Badge color="indigo" className="px-3 py-1 text-[10px] font-black uppercase tracking-widest">Most Popular</Badge>
+                      <div className="flex items-center gap-1.5 text-indigo-600">
+                        <Zap className="w-3.5 h-3.5 fill-current" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Momentum Bonus</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+                <h4 className="text-2xl font-black text-zinc-900 mb-2 tracking-tight">{plan.name}</h4>
+                <div className="flex items-baseline gap-1 mb-8">
+                  <span className="text-4xl font-black text-zinc-900">{plan.price}</span>
+                  <span className="text-zinc-400 text-sm font-bold uppercase tracking-widest">{plan.period}</span>
+                </div>
+                <ul className="space-y-4 mb-10 flex-1">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm font-bold text-zinc-600">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                      {feature}
+                    </li>
+                  ))}
+                  {plan.popular && (
+                    <li className="flex items-center gap-3 text-sm font-black text-indigo-600">
+                      <Zap className="w-5 h-5 fill-current" />
+                      30m Trial Bonus
+                    </li>
+                  )}
+                </ul>
+                <Button 
+                  onClick={() => onUpgrade(plan.id)}
+                  className={`w-full py-5 rounded-2xl font-black text-base shadow-xl transition-all ${plan.popular ? 'bg-indigo-600 text-white shadow-indigo-200 hover:scale-[1.02]' : 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200'}`}
+                >
+                  {plan.popular ? 'Unlock Full Access' : `Start with ${plan.name}`}
+                </Button>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Testimonial & Trust */}
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="flex justify-center gap-1 mb-6">
+        <div className="max-w-3xl mx-auto text-center relative">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-[0.03] select-none pointer-events-none">
+            <Quote className="w-48 h-48 text-zinc-900" />
+          </div>
+          <div className="flex justify-center gap-1.5 mb-8">
             {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />)}
           </div>
-          <Quote className="w-10 h-10 text-zinc-200 mx-auto mb-4" />
-          <p className="text-lg text-zinc-600 italic mb-6">
+          <p className="text-2xl text-zinc-700 font-serif italic mb-10 leading-[1.6] relative z-10">
             "Elo changed everything for me. I used to be terrified of making mistakes, but the coaches are so supportive. I've been practicing 15 minutes a day for 3 months and my confidence has skyrocketed."
           </p>
-          <div className="flex items-center justify-center gap-3 mb-12">
-            <img src="https://picsum.photos/seed/student/100/100" alt="Student" className="w-10 h-10 rounded-full" />
+          <div className="flex items-center justify-center gap-4 mb-16">
+            <img src="https://picsum.photos/seed/student/100/100" alt="Student" className="w-12 h-12 rounded-full border-2 border-white shadow-md" />
             <div className="text-left">
-              <p className="text-sm font-bold text-zinc-900">James L.</p>
-              <p className="text-xs text-zinc-400">Student since 2025</p>
+              <p className="text-base font-black text-zinc-900 tracking-tight">James L.</p>
+              <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Student since 2025</p>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8 border-t border-zinc-200">
-            <div className="flex items-center gap-2 text-zinc-400">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-10 pt-12 border-t border-zinc-200">
+            <div className="flex items-center gap-2.5 text-zinc-400">
               <ShieldCheck className="w-5 h-5" />
-              <span className="text-xs font-bold uppercase tracking-widest">Cancel anytime</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Cancel anytime</span>
             </div>
-            <div className="flex items-center gap-2 text-zinc-400">
+            <div className="flex items-center gap-2.5 text-zinc-400">
               <ShieldCheck className="w-5 h-5" />
-              <span className="text-xs font-bold uppercase tracking-widest">No hidden fees</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">No hidden fees</span>
             </div>
             <button 
               onClick={onMaybeLater}
-              className="text-sm font-bold text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="text-xs font-black text-zinc-300 hover:text-zinc-500 transition-colors uppercase tracking-widest"
             >
               Maybe later
             </button>
