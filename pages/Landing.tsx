@@ -9,9 +9,10 @@ interface LandingProps {
   onLogin: () => void;
   onBecomeCoach: () => void;
   onTrialPurchase: () => void;
+  onAbout: () => void;
 }
 
-const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTrialPurchase }) => {
+const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTrialPurchase, onAbout }) => {
   return (
     <div className="bg-white text-zinc-900 font-sans selection:bg-indigo-100">
       {/* Top Navigation */}
@@ -24,6 +25,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTr
             </div>
             <div className="hidden lg:flex items-center gap-8">
               <a href="#how-it-works" className="text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors">How it works</a>
+              <button onClick={onAbout} className="text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors">About Us</button>
               <a href="#coaches" className="text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors">Our Coaches</a>
               <a href="#pricing" className="text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors">Plans & Pricing</a>
             </div>
@@ -540,7 +542,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTr
             <div className="space-y-6">
               <h5 className="text-xs font-bold text-zinc-900 uppercase tracking-widest">Company</h5>
               <ul className="space-y-4 text-sm text-zinc-500">
-                <li><a href="#" className="hover:text-indigo-600 transition-colors">About us</a></li>
+                <li><button onClick={onAbout} className="hover:text-indigo-600 transition-colors">About us</button></li>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Privacy Policy</a></li>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Terms of Service</a></li>
               </ul>

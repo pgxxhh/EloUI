@@ -30,7 +30,8 @@ export type AppView =
   | 'COACH_EARNINGS'
   | 'EMAIL_VERIFICATION'
   | 'TRIAL_SUCCESS'
-  | 'POST_TRIAL_UPGRADE';
+  | 'POST_TRIAL_UPGRADE'
+  | 'ABOUT';
 
 export type EarningStatus = 'SETTLED_UNPAID' | 'IN_PAYOUT' | 'PAID';
 export type PayoutStatus = 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED';

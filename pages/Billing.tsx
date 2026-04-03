@@ -133,7 +133,7 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
   const [history, setHistory] = useState<PaymentHistoryItem[]>(MOCK_HISTORY);
   
   // Checkout state
-  const [checkoutType, setCheckoutType] = useState<'NONE' | 'SUBSCRIPTION' | 'ADDON'>('NONE');
+  const [checkoutType, setCheckoutType] = useState<'NONE' | 'SUBSCRIPTION' | 'ADDON' | 'TRIAL'>('NONE');
   const [checkoutId, setCheckoutId] = useState<string | null>(null);
   const [isConfirmingChange, setIsConfirmingChange] = useState(false);
   const [pendingPlanToConfirm, setPendingPlanToConfirm] = useState<string | null>(null);
@@ -143,6 +143,7 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
   const [isAutoRenew, setIsAutoRenew] = useState(true);
   const [isCanceled, setIsCanceled] = useState(false);
   const [pendingPlanChange, setPendingPlanChange] = useState<string | null>(null);
+  const [isTrialEligible, setIsTrialEligible] = useState(true);
 
   // User balance for unsubscribed state
   const [promoMinutes] = useState(180); // Updated to match spec example
@@ -153,6 +154,11 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
   const [redeemCode, setRedeemCode] = useState('');
   const [redeemStatus, setRedeemStatus] = useState<'IDLE' | 'LOADING' | 'SUCCESS' | 'ERROR'>('IDLE');
   const [redeemError, setRedeemError] = useState('');
+
+  useEffect(() => {
+    // Ensure we start at the top on mount
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleRedeem = () => {
     checkVerification(() => {
@@ -171,6 +177,12 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
 
   const handlePlanAction = (planId: string) => {
     checkVerification(() => {
+      if (planId === 'trial') {
+        setCheckoutType('TRIAL');
+        setCheckoutId('trial');
+        return;
+      }
+
       if (planId === currentPlan) {
         setIsManagingPlan(true);
       } else if (!hasActiveSubscription) {
@@ -265,7 +277,9 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
               <h3 className="text-2xl font-bold text-zinc-900">Payment Successful!</h3>
               <p className="text-zinc-500 text-sm">
                 {checkoutType === 'SUBSCRIPTION' 
-                  ? 'Your subscription is now active. Welcome to Fluent!' 
+                  ? 'Your subscription is now active. Welcome to Elo!' 
+                  : checkoutType === 'TRIAL'
+                  ? 'Your trial session has been booked. Get ready to speak!'
                   : 'Extra minutes have been added to your account.'}
               </p>
             </div>
@@ -293,7 +307,7 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-4 pt-4 border-t border-zinc-100"
+      className="space-y-4 pt-4"
     >
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
@@ -404,6 +418,68 @@ const Billing: React.FC<BillingProps> = ({ onBack, checkVerification }) => {
             </div>
           </div>
         </Card>
+
+        {/* Compact Trial Card - Fallback Entry */}
+        {isTrialEligible && (
+          <motion.div
+            id="trial-section"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative"
+          >
+            <Card className="p-0 bg-indigo-50/50 border border-indigo-100 rounded-[2rem] shadow-sm hover:shadow-md transition-all overflow-hidden">
+              <div className="p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <Badge color="indigo" className="px-2 py-0 text-[8px] font-black uppercase tracking-widest">Best First Step</Badge>
+                      <h4 className="text-lg font-black text-zinc-900 tracking-tight">30-min Intro Session</h4>
+                    </div>
+                    <p className="text-zinc-500 text-sm font-medium">Experience Elo for the first time. No subscription required.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-6 w-full sm:w-auto">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-xl font-black text-zinc-900">$4.99</p>
+                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">One-time</p>
+                  </div>
+                  {checkoutType !== 'TRIAL' && (
+                    <Button 
+                      onClick={() => handlePlanAction('trial')}
+                      className="flex-1 sm:flex-none px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/20"
+                    >
+                      Book first session
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {checkoutType === 'TRIAL' && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="px-6 pb-6 border-t border-indigo-100/50 bg-white/50"
+                  >
+                    <InlineCheckout 
+                      price="$4.99" 
+                      description="30-min Intro Session" 
+                      onCancel={() => {
+                        setCheckoutType('NONE');
+                        setCheckoutId(null);
+                      }} 
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Subscription Plans */}
         <div id="plans-section" className="space-y-10 pt-4">

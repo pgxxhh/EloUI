@@ -6,6 +6,8 @@ import { UserBookingCard } from '../components/LessonUI';
 import { LessonRequest, Scenario } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 
+type TrialState = 'ELIGIBLE' | 'PURCHASED' | 'COMPLETED' | 'HIDDEN';
+
 interface StudentHomeProps {
   selectedContextId: string | null;
   setSelectedContextId: (id: string | null) => void;
@@ -55,9 +57,149 @@ const StudentHome: React.FC<StudentHomeProps> = ({
   onJoinLesson 
 }) => {
   const [isViewAll, setIsViewAll] = useState(false);
+  const [trialState, setTrialState] = useState<TrialState>('ELIGIBLE');
 
   const selectedContext = SCENARIOS.find(s => s.id === selectedContextId);
   const displayedScenarios = isViewAll ? SCENARIOS : SCENARIOS.slice(0, 3);
+
+  const renderTrialModule = () => {
+    if (trialState === 'HIDDEN') return null;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative"
+      >
+        <Card className={`p-8 md:p-10 border-none shadow-xl rounded-[2.5rem] overflow-hidden relative flex flex-col md:flex-row items-center gap-10 transition-all duration-500 ${
+          trialState === 'COMPLETED' ? 'bg-zinc-900 text-white' : 'bg-white'
+        }`}>
+          {/* Background Accents */}
+          <div className={`absolute top-0 right-0 w-64 h-64 blur-[100px] rounded-full -mr-32 -mt-32 opacity-20 ${
+            trialState === 'COMPLETED' ? 'bg-indigo-500' : 'bg-indigo-100'
+          }`} />
+          
+          <div className="flex-1 space-y-6 relative z-10">
+            {trialState === 'ELIGIBLE' && (
+              <>
+                <div className="space-y-2">
+                  <Badge color="indigo" className="px-3 py-1 text-[10px] font-black uppercase tracking-widest">The Natural First Step</Badge>
+                  <h3 className="text-3xl font-black text-zinc-900 tracking-tight">Meet your first native coach.</h3>
+                  <p className="text-zinc-500 text-lg font-medium leading-relaxed">A 30-minute intro session to find your level and build confidence.</p>
+                </div>
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-zinc-400">
+                    <Icons.Check className="w-4 h-4 text-emerald-500" />
+                    $4.99
+                  </div>
+                  <div className="w-px h-3 bg-zinc-200 self-center" />
+                  <div className="flex items-center gap-2 text-xs font-bold text-zinc-400">
+                    <Icons.Check className="w-4 h-4 text-emerald-500" />
+                    One-time payment
+                  </div>
+                  <div className="w-px h-3 bg-zinc-200 self-center" />
+                  <div className="flex items-center gap-2 text-xs font-bold text-zinc-400">
+                    <Icons.Check className="w-4 h-4 text-emerald-500" />
+                    No subscription
+                  </div>
+                </div>
+                <Button onClick={onGoToPayment} className="px-10 py-5 text-lg rounded-2xl shadow-xl shadow-indigo-100 font-black bg-indigo-600">
+                  Book your first session
+                  <Icons.ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </>
+            )}
+
+            {trialState === 'PURCHASED' && (
+              <>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Ready to Start</span>
+                  </div>
+                  <h3 className="text-3xl font-black text-zinc-900 tracking-tight">Your session is ready.</h3>
+                  <p className="text-zinc-500 text-lg font-medium leading-relaxed">Jump into a 30-minute call with a native coach now. No prep needed.</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                  <Button onClick={onStartSession} className="px-10 py-5 text-lg rounded-2xl shadow-xl shadow-indigo-100 font-black bg-indigo-600">
+                    Find a coach and start
+                    <Icons.ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                  <Button variant="ghost" className="px-8 py-5 text-lg rounded-2xl font-bold text-zinc-400 hover:text-zinc-600">
+                    Schedule for later
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {trialState === 'COMPLETED' && (
+              <>
+                <div className="space-y-2">
+                  <Badge className="bg-indigo-500/20 text-indigo-300 border-none px-3 py-1 text-[10px] font-black uppercase tracking-widest">Momentum Reward</Badge>
+                  <h3 className="text-3xl font-black text-white tracking-tight">Keep the momentum going.</h3>
+                  <p className="text-zinc-400 text-lg font-medium leading-relaxed">Upgrade to a plan in the next 72h and Elo adds <span className="text-white font-black underline decoration-indigo-500 underline-offset-4">30 bonus minutes</span> to your first month.</p>
+                </div>
+                <div className="pt-4">
+                  <Button onClick={onGoToPayment} className="px-10 py-5 text-lg rounded-2xl shadow-xl shadow-indigo-500/20 font-black bg-indigo-600">
+                    See upgrade offer
+                    <Icons.ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="w-full md:w-1/3 flex justify-center items-center relative">
+            {trialState === 'ELIGIBLE' && (
+              <div className="flex -space-x-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="w-16 h-16 rounded-full border-4 border-white shadow-lg overflow-hidden bg-zinc-100">
+                    <img src={`https://picsum.photos/seed/coach${i}/200/200`} alt="Coach" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+                <div className="w-16 h-16 rounded-full border-4 border-white shadow-lg bg-indigo-50 flex items-center justify-center text-indigo-600 font-black text-xl">
+                  +
+                </div>
+              </div>
+            )}
+            {trialState === 'PURCHASED' && (
+              <div className="relative">
+                <div className="w-32 h-32 rounded-[2.5rem] border-4 border-white shadow-2xl overflow-hidden">
+                  <img src="https://picsum.photos/seed/active/400/400" alt="Coach" className="w-full h-full object-cover" />
+                </div>
+                <div className="absolute -bottom-2 -right-2 bg-white p-2 rounded-2xl shadow-lg flex items-center gap-2">
+                  <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-[10px] font-black text-zinc-900 uppercase tracking-widest">Online Now</span>
+                </div>
+              </div>
+            )}
+            {trialState === 'COMPLETED' && (
+              <div className="relative">
+                <div className="w-32 h-32 rounded-full bg-indigo-500/10 flex items-center justify-center border-2 border-indigo-500/30">
+                  <div className="text-center">
+                    <span className="block text-4xl font-black text-white">+30</span>
+                    <span className="block text-[10px] font-black text-indigo-300 uppercase tracking-widest">Minutes</span>
+                  </div>
+                </div>
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 border-2 border-dashed border-indigo-500/20 rounded-full"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Demo State Toggles (Invisible in prod, but here for testing) */}
+          <div className="absolute bottom-2 right-2 flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
+            {(['ELIGIBLE', 'PURCHASED', 'COMPLETED', 'HIDDEN'] as TrialState[]).map(s => (
+              <button key={s} onClick={() => setTrialState(s)} className="text-[8px] p-1 bg-zinc-100 rounded">{s[0]}</button>
+            ))}
+          </div>
+        </Card>
+      </motion.div>
+    );
+  };
 
   return (
     <div className="space-y-20 animate-in fade-in duration-1000 pb-32">
@@ -118,6 +260,9 @@ const StudentHome: React.FC<StudentHomeProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Trial Offer Module */}
+      {renderTrialModule()}
 
       {/* My Bookings Section */}
       <section className="space-y-6">

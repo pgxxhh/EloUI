@@ -25,6 +25,7 @@ import VoiceCall from './pages/VoiceCall';
 import Admin from './pages/Admin';
 import LessonReview from './pages/LessonReview';
 import PreCheck from './pages/PreCheck';
+import About from './pages/About';
 import CoachEarnings from './pages/CoachEarnings';
 import SessionProcessing from './pages/SessionProcessing';
 import TrialSuccess from './pages/TrialSuccess';
@@ -85,6 +86,7 @@ const App: React.FC = () => {
               setIsLoggedIn(true); // Simulate login for trial
               setView('TRIAL_SUCCESS');
             }}
+            onAbout={() => setView('ABOUT')}
           />
         );
       case 'STUDENT_HOME':
@@ -146,6 +148,13 @@ const App: React.FC = () => {
         return <Review onReturnHome={() => setView('STUDENT_HOME')} />;
       case 'LESSON_REVIEW':
         return <LessonReview onBack={() => setView('POST_TRIAL_UPGRADE')} />;
+      case 'ABOUT':
+        return (
+          <About 
+            onStart={() => handleAuthRedirect('STUDENT', 'SIGNUP')} 
+            onBack={() => setView('LANDING')} 
+          />
+        );
       case 'TRIAL_SUCCESS':
         return (
           <TrialSuccess 

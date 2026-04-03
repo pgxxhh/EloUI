@@ -79,17 +79,17 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       whatYouSaid: '我在一个大公司工作',
       betterVersion: '我在一家大型企业任职',
       pinyin: 'Wǒ zài yì jiā dàxíng qǐyè rènzhí',
-      whyItMatters: 'Using "一家" (measure word for companies) and "任职" (formal) sounds more professional for business contexts.',
-      category: 'Vocabulary',
-      drillDuration: '1 min',
-      drillGoal: 'Master formal business introductions'
+      whyItMatters: '在职场语境下，使用量词“一家”并搭配正式词汇“任职”，会让表达显得更专业、更得体。',
+      category: '词汇升级',
+      drillDuration: '1 分钟',
+      drillGoal: '掌握职场正式自我介绍'
     }
   },
   { 
     id: 't5', 
     timestamp: '01:15',
     speaker: 'You', 
-    text: '我昨天加班到十点。', 
+    text: '我昨天加班到十点', 
     pinyin: 'Wǒ zuótiān jiābān dào shí diǎn.',
     translation: 'I worked overtime until 10 yesterday.',
     type: 'issue',
@@ -97,10 +97,10 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       whatYouSaid: '我昨天加班到十点',
       betterVersion: '我昨天加班加到晚上十点',
       pinyin: 'Wǒ zuótiān jiābān jiā dào wǎnshàng shí diǎn',
-      whyItMatters: 'Adding "加" before "到" emphasizes the duration/result of the action, making it a proper resultative complement.',
-      category: 'Grammar',
-      drillDuration: '2 mins',
-      drillGoal: 'Fix resultative complement usage'
+      whyItMatters: '在“到”之前重复动词“加”，构成了动结式补语，能更清晰地强调动作的持续时间和结果。',
+      category: '语法修正',
+      drillDuration: '2 分钟',
+      drillGoal: '修正动结式补语的用法'
     }
   },
   { 
@@ -115,10 +115,10 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       whatYouSaid: '买三个苹果',
       betterVersion: '买了三个苹果',
       pinyin: 'mǎi le sān gè píngguǒ',
-      whyItMatters: 'The particle "了" is essential here to indicate the completion of the action in the past.',
-      category: 'Grammar',
-      drillDuration: '1 min',
-      drillGoal: 'Practice past tense completion'
+      whyItMatters: '助词“了”在这里至关重要，它明确表示动作在过去已经完成。',
+      category: '语法修正',
+      drillDuration: '1 分钟',
+      drillGoal: '练习过去完成时的表达'
     }
   },
   {
@@ -139,10 +139,10 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       whatYouSaid: '努力',
       betterVersion: '兢兢业业',
       pinyin: 'jīng jīng yè yè',
-      whyItMatters: '"兢兢业业" is a great idiom (chengyu) to describe being cautious and conscientious in one\'s work.',
-      category: 'Idiom',
-      drillDuration: '2 mins',
-      drillGoal: 'Learn advanced workplace idioms'
+      whyItMatters: '“兢兢业业”是一个非常地道的成语，形容做事小心谨慎、认真负责，在职场评价中非常加分。',
+      category: '成语表达',
+      drillDuration: '2 分钟',
+      drillGoal: '学习职场高阶成语'
     }
   }
 ];
@@ -153,30 +153,30 @@ const PRACTICE_CARDS: PracticeCard[] = [
     chinese: '我在一家大型企业任职。', 
     pinyin: 'Wǒ zài yì jiā dàxíng qǐyè rènzhí.', 
     english: 'I hold a position in a large corporation.', 
-    focus: 'Workplace Phrase Upgrade',
-    skill: 'Professional Vocabulary',
-    reason: 'Upgrades basic "work" to professional "hold a position"',
-    effort: '1 min'
+    focus: '职场用语升级',
+    skill: '专业词汇',
+    reason: '将基础的“工作”升级为更具职业感的“任职”',
+    effort: '1 分钟'
   },
   { 
     id: 'p2', 
     chinese: '我昨天加班加到晚上十点。', 
     pinyin: 'Wǒ zuótiān jiābān jiā dào wǎnshàng shí diǎn.', 
     english: 'I worked overtime until 10 PM yesterday.', 
-    focus: 'Fix Sentence Structure',
-    skill: 'Grammar Accuracy',
-    reason: 'Corrects a common structural error in expressing duration',
-    effort: '2 mins'
+    focus: '句式结构修正',
+    skill: '语法准确性',
+    reason: '修正表达持续时长时常见的结构错误',
+    effort: '2 分钟'
   },
   { 
     id: 'p3', 
     chinese: '我的同事们都兢兢业业。', 
     pinyin: 'Wǒ de tóngshìmen dōu jīng jīng yè yè.', 
     english: 'My colleagues are all very conscientious.', 
-    focus: 'Sound More Natural',
-    skill: 'Native Fluency',
-    reason: 'Introduces high-level idioms for workplace descriptions',
-    effort: '2 mins'
+    focus: '表达地道化',
+    skill: '母语级流利度',
+    reason: '引入高阶成语，使职场描述更生动专业',
+    effort: '2 分钟'
   }
 ];
 
@@ -191,9 +191,9 @@ interface AICoachStep {
 }
 
 const COACH_STEPS: AICoachStep[] = [
-  { id: 'REVIEW', title: 'Evidence' },
-  { id: 'TRANSFER', title: 'Transfer' },
-  { id: 'PRACTICE', title: 'Drill' }
+  { id: 'REVIEW', title: '实战证据' },
+  { id: 'TRANSFER', title: '场景迁移' },
+  { id: 'PRACTICE', title: '专项操练' }
 ];
 
 const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }> = ({ sessionId, onBack }) => {
@@ -247,9 +247,9 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
   };
 
   const getGradeConfig = (type?: string): { label: string; color: string; icon: any; grade: EvidenceGrade } => {
-    if (type === 'issue') return { label: 'Critical Fix', color: 'rose', icon: AlertCircle, grade: 'FIX' };
-    if (type === 'highlight') return { label: 'Native Upgrade', color: 'indigo', icon: Sparkles, grade: 'UPGRADE' };
-    return { label: 'Golden Pattern', color: 'emerald', icon: Star, grade: 'GOLDEN' };
+    if (type === 'issue') return { label: '核心修正', color: 'rose', icon: AlertCircle, grade: 'FIX' };
+    if (type === 'highlight') return { label: '地道升级', color: 'indigo', icon: Sparkles, grade: 'UPGRADE' };
+    return { label: '金牌表达', color: 'emerald', icon: Star, grade: 'GOLDEN' };
   };
 
   return (
@@ -265,17 +265,17 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               <RotateCcw className="w-4 h-4 text-zinc-500" />
             </button>
             <div className="space-y-0.5">
-              <h1 className="text-base md:text-lg font-bold text-zinc-900">Speaking Debrief</h1>
-              <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">Conversation Archive Workspace</p>
+              <h1 className="text-base md:text-lg font-bold text-zinc-900">口语复盘</h1>
+              <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">对话存档工作区</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">
               <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">Mar 17, 2026</span>
+              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">2026年3月17日</span>
             </div>
             <Button variant="secondary" className="rounded-full px-5 py-2 text-[11px] font-bold uppercase tracking-wider">
-              Share
+              分享
             </Button>
           </div>
         </div>
@@ -296,8 +296,8 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                 <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-indigo-600 animate-pulse" />
               </div>
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold text-zinc-900">Analyzing your conversation...</h2>
-                <p className="text-zinc-500 font-medium">AI is identifying key learning moments and generating your debrief.</p>
+                <h2 className="text-2xl font-bold text-zinc-900">正在分析您的对话...</h2>
+                <p className="text-zinc-500 font-medium">AI 正在识别关键学习时刻并生成您的复盘报告。</p>
               </div>
             </motion.div>
           ) : reviewStatus === 'FAILED' ? (
@@ -313,11 +313,11 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               </div>
               <div className="text-center space-y-4">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-bold text-zinc-900">Failed to generate debrief</h2>
-                  <p className="text-zinc-500">Something went wrong while processing your session data.</p>
+                  <h2 className="text-2xl font-bold text-zinc-900">生成复盘报告失败</h2>
+                  <p className="text-zinc-500">处理您的课程数据时出现了问题。</p>
                 </div>
                 <Button onClick={() => setReviewStatus('LOADING')} variant="secondary" className="bg-zinc-900 text-white hover:bg-zinc-800">
-                  Retry Analysis
+                  重试分析
                 </Button>
               </div>
             </motion.div>
@@ -334,11 +334,11 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               </div>
               <div className="text-center space-y-4">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-bold text-zinc-900">No recording found</h2>
-                  <p className="text-zinc-500">We couldn't find a recording for this session. This might happen if the session was too short.</p>
+                  <h2 className="text-2xl font-bold text-zinc-900">未找到录音</h2>
+                  <p className="text-zinc-500">我们无法找到此课程的录音。如果课程时间过短，可能会发生这种情况。</p>
                 </div>
                 <Button onClick={onBack} variant="secondary" className="bg-zinc-900 text-white hover:bg-zinc-800">
-                  Back to Home
+                  返回首页
                 </Button>
               </div>
             </motion.div>
@@ -354,11 +354,11 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                 <Card className="p-6 md:p-8 bg-white border-zinc-100 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden relative group">
                   <div className="space-y-6">
                     <div className="space-y-1.5">
-                      <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em]">Session Recording</p>
-                      <h3 className="text-lg font-bold text-zinc-900 leading-tight">Conversation with Lin Wang</h3>
+                      <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em]">课程录音</p>
+                      <h3 className="text-lg font-bold text-zinc-900 leading-tight">与 Lin Wang 的对话</h3>
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Context:</span>
-                        <span className="text-[10px] font-bold text-zinc-600">Workplace Small Talk</span>
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">场景:</span>
+                        <span className="text-[10px] font-bold text-zinc-600">职场社交闲谈</span>
                       </div>
                     </div>
 
@@ -411,15 +411,15 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-[10px] font-bold text-indigo-600">LW</div>
                 <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Coach</p>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">教练</p>
                   <p className="text-xs font-bold text-zinc-900">Lin Wang</p>
                 </div>
               </div>
               <div className="h-8 w-px bg-zinc-200" />
               <div className="flex items-center gap-3 text-right">
                 <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Duration</p>
-                  <p className="text-xs font-bold text-zinc-900">25 mins</p>
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">时长</p>
+                  <p className="text-xs font-bold text-zinc-900">25 分钟</p>
                 </div>
                 <Clock className="w-4 h-4 text-zinc-400" />
               </div>
@@ -432,7 +432,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
             {/* Top Tabs Navigation */}
             <div className="flex items-center justify-between border-b border-zinc-100 pb-1">
               <div className="flex items-center gap-8">
-                {(['Transcript', 'Feedback'] as const).map((tab) => {
+                {([['Transcript', '对话逐字稿'], ['Feedback', '学习反馈']] as const).map(([tab, label]) => {
                   const isActive = activeTab === tab;
                   return (
                     <button
@@ -442,7 +442,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                         isActive ? 'text-zinc-900' : 'text-zinc-400 hover:text-zinc-600'
                       }`}
                     >
-                      {tab}
+                      {label}
                       {isActive && (
                         <motion.div 
                           layoutId="activeTab"
@@ -456,7 +456,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               
               {activeTab === 'Transcript' && (
                 <div className="hidden md:flex items-center gap-2 bg-zinc-100 p-1 rounded-xl">
-                  {(['All', 'Critical', 'Upgrades'] as const).map(f => (
+                  {([['All', '全部'], ['Critical', '核心修正'], ['Upgrades', '地道表达']] as const).map(([f, label]) => (
                     <button
                       key={f}
                       onClick={() => setFilter(f as any)}
@@ -464,7 +464,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                         filter === f ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
                       }`}
                     >
-                      {f}
+                      {label}
                     </button>
                   ))}
                 </div>
@@ -485,10 +485,10 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Zap className="w-3.5 h-3.5 text-indigo-500" />
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Jump to Key Moments</span>
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">跳转至关键时刻</span>
                       </div>
                       <div className="flex items-center gap-1.5 bg-zinc-100/50 p-1 rounded-xl">
-                        {(['All', 'Critical', 'Upgrades'] as const).map(f => (
+                        {([['All', '全部'], ['Critical', '核心'], ['Upgrades', '升级']] as const).map(([f, label]) => (
                           <button
                             key={f}
                             onClick={() => setFilter(f as any)}
@@ -496,7 +496,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                               filter === f ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
                             }`}
                           >
-                            {f}
+                            {label}
                           </button>
                         ))}
                       </div>
@@ -616,23 +616,23 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                     <div className="space-y-6">
                       <div className="space-y-4">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
-                          AI Analysis Summary
+                          AI 分析摘要
                         </div>
                         <h2 className="text-3xl font-bold text-zinc-900 tracking-tight leading-tight">
-                          You mastered <span className="text-indigo-600">formal introductions</span>.
+                          你已掌握 <span className="text-indigo-600">职场正式介绍</span>。
                         </h2>
                         <p className="text-base text-zinc-500 leading-relaxed">
-                          Great progress today. You successfully navigated workplace small talk and correctly used <span className="text-zinc-900 font-semibold underline decoration-indigo-200 decoration-4 underline-offset-4">"任职于"</span> in context.
+                          今天进步很大！你成功应对了职场社交闲谈，并准确地在语境中使用了 <span className="text-zinc-900 font-semibold underline decoration-indigo-200 decoration-4 underline-offset-4">“任职于”</span>。
                         </p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-100 space-y-1">
-                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Accuracy</p>
+                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">准确率</p>
                           <p className="text-xl font-bold text-zinc-900">92%</p>
                         </div>
                         <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-100 space-y-1">
-                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Fluency</p>
+                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">流利度</p>
                           <p className="text-xl font-bold text-zinc-900">B+</p>
                         </div>
                       </div>
@@ -642,7 +642,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                     <section className="space-y-6">
                       <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
                         <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                        Key Feedback Points
+                        核心反馈点
                       </h3>
                       <div className="space-y-4">
                         {criticalEvidence.slice(0, 2).map((line, idx) => (
@@ -658,7 +658,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                                 }}
                                 className="text-[10px] font-bold text-indigo-600 flex items-center gap-1 hover:gap-2 transition-all"
                               >
-                                View in Transcript <ArrowRight className="w-3 h-3" />
+                                在逐字稿中查看 <ArrowRight className="w-3 h-3" />
                               </button>
                             </div>
                             <div className="space-y-3">
@@ -678,11 +678,11 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                     <div className="pt-10 border-t border-zinc-100">
                       <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-3xl border border-zinc-100">
                         <div className="space-y-1">
-                          <p className="text-sm font-bold text-zinc-900">Ready for the next step?</p>
-                          <p className="text-xs text-zinc-400">Your next milestone is 2 sessions away.</p>
+                          <p className="text-sm font-bold text-zinc-900">准备好进行下一步了吗？</p>
+                          <p className="text-xs text-zinc-400">距离下一个里程碑还有 2 节课。</p>
                         </div>
                         <Button variant="secondary" className="rounded-xl px-6 py-2 text-xs font-bold">
-                          Book Session
+                          预约课程
                         </Button>
                       </div>
                     </div>
@@ -692,7 +692,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                   <div className="xl:col-span-5 space-y-6 xl:sticky xl:top-28">
                     <div className="flex items-center justify-between px-2">
                       <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
-                        Interactive Practice
+                        互动练习
                       </h3>
                     </div>
                     
@@ -729,11 +729,11 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                                     <span className="text-[11px] font-mono text-zinc-400 font-bold">@ {selectedLine.timestamp}</span>
                                   </div>
                                   <p className="text-lg font-bold text-zinc-900 leading-[1.3]">
-                                    "{selectedLine.aiFeedback.whatYouSaid}"
+                                    “{selectedLine.aiFeedback.whatYouSaid}”
                                   </p>
                                 </div>
                                 <div className="p-5 bg-indigo-50/30 rounded-[1.5rem] border border-indigo-100/50 space-y-3">
-                                  <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">The Insight</p>
+                                  <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">深度解析</p>
                                   <p className="text-sm text-zinc-600 leading-relaxed font-medium">{selectedLine.aiFeedback.whyItMatters}</p>
                                 </div>
                                 <div className="mt-auto pt-6">
@@ -741,7 +741,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                                     onClick={() => setActiveStep('TRANSFER')}
                                     className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-3"
                                   >
-                                    Next: Transfer
+                                    下一步：场景迁移
                                     <ArrowRight className="w-4 h-4" />
                                   </Button>
                                 </div>
@@ -752,12 +752,12 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                               <div className="space-y-6 flex-1">
                                 <div className="space-y-6">
                                   <div className="space-y-2">
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Scenario</p>
-                                    <h4 className="text-xl font-bold text-zinc-900 leading-tight">Job Interview</h4>
+                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">应用场景</p>
+                                    <h4 className="text-xl font-bold text-zinc-900 leading-tight">求职面试</h4>
                                   </div>
                                   <div className="p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 space-y-3">
-                                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Target Pattern</p>
-                                    <p className="text-2xl font-bold text-indigo-900">"我曾任职于..."</p>
+                                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">目标句式</p>
+                                    <p className="text-2xl font-bold text-indigo-900">“我曾任职于...”</p>
                                   </div>
                                 </div>
                                 <div className="mt-auto pt-6">
@@ -765,7 +765,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                                     onClick={() => setActiveStep('PRACTICE')}
                                     className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-3"
                                   >
-                                    Try it Now
+                                    立即尝试
                                     <ChevronRight className="w-4 h-4" />
                                   </Button>
                                 </div>
@@ -775,8 +775,8 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                             {activeStep === 'PRACTICE' && (
                               <div className="space-y-6 flex-1">
                                 <div className="space-y-6 text-center py-4">
-                                  <p className="text-xs text-zinc-500 font-medium">Say aloud:</p>
-                                  <p className="text-xl font-bold text-zinc-900">"我曾任职于一家大型企业。"</p>
+                                  <p className="text-xs text-zinc-500 font-medium">请大声朗读：</p>
+                                  <p className="text-xl font-bold text-zinc-900">“我曾任职于一家大型企业。”</p>
                                   <div className="flex flex-col items-center gap-4">
                                     <button 
                                       onMouseDown={() => setIsRecording(true)}
@@ -788,16 +788,16 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                                       <Mic2 className={`w-6 h-6 text-white ${isRecording ? 'animate-pulse' : ''}`} />
                                     </button>
                                     <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                                      {isRecording ? 'Recording...' : 'Hold to Speak'}
+                                      {isRecording ? '正在录音...' : '按住说话'}
                                     </p>
                                   </div>
                                 </div>
                                 <div className="mt-auto pt-6 flex gap-3">
                                   <Button variant="secondary" className="flex-1 py-3.5 rounded-2xl font-bold text-[10px]" onClick={() => setActiveStep('REVIEW')}>
-                                    Back
+                                    返回
                                   </Button>
                                   <Button className="flex-[2] py-3.5 bg-emerald-600 text-white rounded-2xl font-bold text-[10px]">
-                                    Complete
+                                    完成练习
                                   </Button>
                                 </div>
                               </div>
@@ -808,7 +808,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                         <Card className="p-10 border-dashed border-zinc-200 bg-zinc-50/30 rounded-[2.5rem] flex flex-col items-center justify-center text-center space-y-4 min-h-[300px]">
                           <Target className="w-6 h-6 text-zinc-200" />
                           <p className="text-xs text-zinc-400 font-medium max-w-[180px]">
-                            Select a highlight in the transcript to start coaching.
+                            在逐字稿中选择一个高亮部分开始练习。
                           </p>
                         </Card>
                       )}
@@ -834,7 +834,7 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
           onClick={onBack}
           className="bg-zinc-900 text-white px-12 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl hover:bg-zinc-800 transition-all"
         >
-          Complete Session
+          完成复盘
           <ArrowRight className="w-5 h-5" />
         </Button>
       </motion.div>
