@@ -23,15 +23,14 @@ export type AppView =
   | 'ADMIN'
   | 'FIND_COACH'
   | 'COACH_HUB'
-  | 'CLASSROOM'
-  | 'VOICE_CALL'
   | 'LESSON_REVIEW'
   | 'PRE_CHECK'
   | 'COACH_EARNINGS'
   | 'EMAIL_VERIFICATION'
   | 'TRIAL_SUCCESS'
   | 'POST_TRIAL_UPGRADE'
-  | 'ABOUT';
+  | 'ABOUT'
+  | 'LIVE_LESSON';
 
 export type EarningStatus = 'SETTLED_UNPAID' | 'IN_PAYOUT' | 'PAID';
 export type PayoutStatus = 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED';

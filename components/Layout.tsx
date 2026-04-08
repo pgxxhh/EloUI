@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({
   onVerify = () => {},
   onResend = () => {}
 }) => {
-  const isFocusMode = currentView === 'ABOUT' || currentView === 'EMAIL_VERIFICATION' || currentView === 'LESSON_REVIEW' || currentView === 'HISTORY_DETAIL' || currentView === 'SESSION' || currentView === 'VOICE_CALL' || currentView === 'CLASSROOM' || currentView === 'LANDING' || currentView === 'COACH_LANDING' || currentView === 'COACH_APPLY' || currentView === 'COACH_STATUS' || currentView === 'COACH_ONBOARDING_SUCCESS' || currentView === 'COACH_ONBOARDING' || currentView === 'AUTH';
+  const isFocusMode = currentView === 'ABOUT' || currentView === 'LIVE_LESSON' || currentView === 'EMAIL_VERIFICATION' || currentView === 'LESSON_REVIEW' || currentView === 'HISTORY_DETAIL' || currentView === 'SESSION' || currentView === 'LANDING' || currentView === 'COACH_LANDING' || currentView === 'COACH_APPLY' || currentView === 'COACH_STATUS' || currentView === 'COACH_ONBOARDING_SUCCESS' || currentView === 'COACH_ONBOARDING' || currentView === 'AUTH';
 
   return (
     <div className={`min-h-screen flex flex-col ${isFocusMode ? '' : 'max-w-7xl mx-auto px-6'}`}>

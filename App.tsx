@@ -20,8 +20,7 @@ import History from './pages/History';
 import HistoryDetail from './pages/HistoryDetail';
 import FindCoach from './pages/FindCoach';
 import CoachHub from './pages/CoachHub';
-import Classroom from './pages/Classroom';
-import VoiceCall from './pages/VoiceCall';
+import LiveLesson from './components/LiveLesson';
 import Admin from './pages/Admin';
 import LessonReview from './pages/LessonReview';
 import PreCheck from './pages/PreCheck';
@@ -125,7 +124,7 @@ const App: React.FC = () => {
       case 'MATCHING':
         return (
           <Matching 
-            onMatchFound={() => setView('VOICE_CALL')} 
+            onMatchFound={() => setView('LIVE_LESSON')} 
             coachName={selectedCoach?.name}
             topicName={SCENARIOS.find(s => s.id === selectedContextId)?.chineseTitle || 'Open Conversation'}
           />
@@ -234,20 +233,12 @@ const App: React.FC = () => {
         );
       case 'COACH_HUB':
         return <CoachHub onViewEarnings={() => setView('COACH_EARNINGS')} />;
-      case 'CLASSROOM':
+      case 'LIVE_LESSON':
         return (
-          <Classroom 
-            selectedContextId={selectedContextId}
-            onEnd={() => setView('SESSION_PROCESSING')} 
-          />
-        );
-      case 'VOICE_CALL':
-        return (
-          <VoiceCall 
-            selectedContextId={selectedContextId}
-            coachName="Coach Wei" 
-            coachAvatar="https://picsum.photos/seed/wei/200/200" 
-            onEnd={() => setView('SESSION_PROCESSING')} 
+          <LiveLesson 
+            coachName={selectedCoach?.name || "Coach Wei"}
+            topic={SCENARIOS.find(s => s.id === selectedContextId)?.title || "Open Conversation"}
+            onLeave={() => setView('SESSION_PROCESSING')}
           />
         );
       case 'ADMIN':
@@ -255,7 +246,7 @@ const App: React.FC = () => {
       case 'PRE_CHECK':
         return (
           <PreCheck 
-            onEnter={() => setView('CLASSROOM')} 
+            onEnter={() => setView('LIVE_LESSON')} 
             onBack={() => setView('STUDENT_HOME')} 
           />
         );
