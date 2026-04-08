@@ -196,85 +196,81 @@ const PreCheck: React.FC<PreCheckProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-indigo-500/30 flex flex-col relative overflow-hidden">
-      {/* Technical Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100 flex flex-col relative overflow-hidden">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-50" />
       
-      {/* Background Ambient Glow */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
-
       {/* 1. TOP BAR */}
-      <header className="relative z-20 px-8 py-6 flex justify-between items-center">
+      <header className="relative z-20 px-8 py-5 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <button 
           onClick={onBack}
-          className="group flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
+          className="group flex items-center gap-3 text-slate-500 hover:text-slate-900 transition-colors"
         >
-          <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all border border-white/5">
+          <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-all border border-slate-200">
             <ChevronLeft className="w-5 h-5" />
           </div>
-          <span className="text-xs font-black uppercase tracking-[0.2em]">Exit Lobby</span>
+          <span className="text-xs font-bold uppercase tracking-widest">Exit Lobby</span>
         </button>
 
         <div className="flex items-center gap-6">
-          <div className="hidden md:flex items-center gap-4 px-4 py-2 bg-white/5 rounded-xl border border-white/5">
+          <div className="hidden md:flex items-center gap-4 px-4 py-2 bg-slate-100/50 rounded-xl border border-slate-200">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Secure Link</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Secure Link</span>
             </div>
-            <div className="w-px h-3 bg-white/10" />
+            <div className="w-px h-3 bg-slate-300" />
             <div className="flex items-center gap-2">
-              <Activity className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Latency: 24ms</span>
+              <Activity className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Latency: 24ms</span>
             </div>
           </div>
           
-          <div className="bg-zinc-900/80 backdrop-blur-xl border border-white/10 px-6 py-2.5 rounded-2xl flex items-center gap-4 shadow-2xl">
+          <div className="bg-white border border-slate-200 px-5 py-2 rounded-2xl flex items-center gap-4 shadow-sm">
             <div className="flex flex-col items-end">
-              <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Starts In</span>
-              <span className="text-lg font-black tabular-nums text-white leading-none">{formatTime(timeLeft)}</span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Starts In</span>
+              <span className="text-lg font-bold tabular-nums text-slate-900 leading-none">{formatTime(timeLeft)}</span>
             </div>
-            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.5)]" />
+            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.4)]" />
           </div>
         </div>
       </header>
 
       {/* 2. MAIN CONTENT AREA */}
-      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-8 py-4 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
+      <main className="relative z-10 flex-1 max-w-7xl mx-auto w-full px-8 py-8 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
         
         {/* LEFT: THE STAGE */}
-        <section className="flex flex-col gap-8 sticky top-8">
+        <section className="flex flex-col gap-10 sticky top-28">
           <div className="relative">
             {/* Main Stage Container */}
-            <div className="aspect-video bg-zinc-900 rounded-[2.5rem] border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] overflow-hidden relative group">
+            <div className="aspect-video bg-slate-900 rounded-[2.5rem] border-8 border-white shadow-2xl overflow-hidden relative group">
               
               {/* Technical Viewfinder Overlay */}
               <div className="absolute inset-0 pointer-events-none z-20">
                 {/* Corners */}
-                <div className="absolute top-8 left-8 w-8 h-8 border-t-2 border-l-2 border-white/20 rounded-tl-lg" />
-                <div className="absolute top-8 right-8 w-8 h-8 border-t-2 border-r-2 border-white/20 rounded-tr-lg" />
-                <div className="absolute bottom-8 left-8 w-8 h-8 border-b-2 border-l-2 border-white/20 rounded-bl-lg" />
-                <div className="absolute bottom-8 right-8 w-8 h-8 border-b-2 border-r-2 border-white/20 rounded-br-lg" />
+                <div className="absolute top-8 left-8 w-8 h-8 border-t-2 border-l-2 border-white/30 rounded-tl-lg" />
+                <div className="absolute top-8 right-8 w-8 h-8 border-t-2 border-r-2 border-white/30 rounded-tr-lg" />
+                <div className="absolute bottom-8 left-8 w-8 h-8 border-b-2 border-l-2 border-white/30 rounded-bl-lg" />
+                <div className="absolute bottom-8 right-8 w-8 h-8 border-b-2 border-r-2 border-white/30 rounded-br-lg" />
                 
                 {/* Center Crosshair */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center">
-                  <div className="w-px h-4 bg-white/10" />
-                  <div className="absolute w-4 h-px bg-white/10" />
+                  <div className="w-px h-4 bg-white/20" />
+                  <div className="absolute w-4 h-px bg-white/20" />
                 </div>
 
                 {/* Technical Data */}
                 <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
-                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isCameraOn ? 'bg-rose-500' : 'bg-zinc-500'}`} />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-white">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
+                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isCameraOn ? 'bg-rose-500' : 'bg-slate-500'}`} />
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-white">
                       {isCameraOn ? 'Live Preview' : 'Preview Paused'}
                     </span>
                   </div>
                 </div>
 
                 <div className="absolute bottom-8 right-8 flex flex-col items-end gap-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white/40">Resolution</span>
-                  <span className="text-[10px] font-black text-white/80">1080p • 30fps</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-white/40">Resolution</span>
+                  <span className="text-[10px] font-bold text-white/80">1080p • 30fps</span>
                 </div>
               </div>
 
@@ -284,58 +280,49 @@ const PreCheck: React.FC<PreCheckProps> = ({
                   <img 
                     src="https://picsum.photos/seed/precheck_self/1280/720?blur=2" 
                     alt="Self Preview" 
-                    className="w-full h-full object-cover opacity-80"
+                    className="w-full h-full object-cover opacity-90"
                     referrerPolicy="no-referrer"
                   />
                   {/* Subtle Scanline Overlay */}
                   <motion.div 
                     animate={{ backgroundPosition: ['0% 0%', '0% 100%'] }}
                     transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%)] bg-[size:100%_4px] pointer-events-none opacity-30" 
+                    className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.05)_50%)] bg-[size:100%_4px] pointer-events-none opacity-20" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </div>
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-900/80 backdrop-blur-md relative">
-                  {/* Lens Reflection Texture */}
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05)_0%,transparent_70%)]" />
-                  
+                <div className="w-full h-full flex flex-col items-center justify-center bg-slate-800 relative">
                   <div className="relative z-10 flex flex-col items-center text-center px-12">
-                    <div className="w-24 h-24 rounded-full bg-zinc-800/50 flex items-center justify-center border border-white/10 mb-6 shadow-2xl">
-                      {cameraError === 'denied' ? <ShieldCheck className="w-10 h-10 text-rose-500" /> : <VideoOff className="w-10 h-10 text-zinc-600" />}
+                    <div className="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center border border-white/10 mb-6 shadow-xl">
+                      {cameraError === 'denied' ? <ShieldCheck className="w-8 h-8 text-rose-400" /> : <VideoOff className="w-8 h-8 text-slate-400" />}
                     </div>
                     
-                    <h3 className="text-xl font-black text-white uppercase tracking-widest">
+                    <h3 className="text-lg font-bold text-white uppercase tracking-widest">
                       {cameraError === 'denied' ? 'Access Blocked' : cameraError === 'not-found' ? 'No Camera Found' : 'Camera Disabled'}
                     </h3>
                     
-                    <p className="text-zinc-500 text-xs font-bold mt-2 uppercase tracking-widest max-w-md">
+                    <p className="text-slate-400 text-[11px] font-medium mt-2 uppercase tracking-widest max-w-xs leading-relaxed">
                       {cameraError === 'denied' 
-                        ? 'Please enable camera permissions in your browser settings to continue with video.' 
+                        ? 'Please enable camera permissions in your browser settings.' 
                         : cameraError === 'not-found'
-                        ? 'We couldn\'t detect a camera. You can still join the lesson with audio only.'
-                        : 'You are currently in audio-only mode. Your coach won\'t see you.'}
+                        ? 'We couldn\'t detect a camera. Audio-only mode is active.'
+                        : 'You are currently in audio-only mode.'}
                     </p>
                     
                     {cameraError !== 'denied' && cameraError !== 'not-found' && (
                       <button 
                         onClick={toggleCamera}
-                        className="mt-8 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-indigo-600/20"
+                        className="mt-8 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-lg shadow-indigo-600/20"
                       >
                         Enable Camera
                       </button>
                     )}
                     
                     {cameraError === 'denied' && (
-                      <div className="mt-8 flex flex-col items-center gap-4">
-                        <div className="flex items-center gap-2 text-[10px] font-black text-rose-400 uppercase tracking-widest bg-rose-500/10 px-4 py-2 rounded-lg border border-rose-500/20">
-                          <AlertCircle className="w-3.5 h-3.5" />
-                          Permissions required for video
-                        </div>
-                        <button className="text-[10px] font-black text-zinc-400 underline decoration-zinc-700 underline-offset-4 hover:text-white transition-colors">
-                          How to enable camera access?
-                        </button>
-                      </div>
+                      <button className="mt-6 text-[10px] font-bold text-slate-400 underline decoration-slate-600 underline-offset-4 hover:text-white transition-colors">
+                        How to enable camera access?
+                      </button>
                     )}
                   </div>
                 </div>
@@ -345,23 +332,23 @@ const PreCheck: React.FC<PreCheckProps> = ({
               <div className="absolute bottom-8 left-8 flex items-center gap-3 z-30">
                 <button 
                   onClick={toggleMic}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all border ${!isMicOn ? 'bg-rose-600 border-rose-500 text-white shadow-[0_0_20px_rgba(225,29,72,0.4)]' : 'bg-black/40 backdrop-blur-md text-white hover:bg-black/60 border-white/10'}`}
+                  className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all border ${!isMicOn ? 'bg-rose-600 border-rose-500 text-white shadow-lg shadow-rose-600/20' : 'bg-black/40 backdrop-blur-md text-white hover:bg-black/60 border-white/10'}`}
                 >
-                  {!isMicOn ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  {!isMicOn ? <MicOff className="w-4.5 h-4.5" /> : <Mic className="w-4.5 h-4.5" />}
                 </button>
                 <button 
                   onClick={toggleCamera}
                   disabled={cameraError === 'denied' || cameraError === 'not-found'}
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all border ${!isCameraOn ? 'bg-zinc-800 border-white/5 text-zinc-500' : 'bg-black/40 backdrop-blur-md text-white hover:bg-black/60 border-white/10'} ${(cameraError === 'denied' || cameraError === 'not-found') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all border ${!isCameraOn ? 'bg-slate-700 border-white/5 text-slate-400' : 'bg-black/40 backdrop-blur-md text-white hover:bg-black/60 border-white/10'} ${(cameraError === 'denied' || cameraError === 'not-found') ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  {!isCameraOn ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+                  {!isCameraOn ? <VideoOff className="w-4.5 h-4.5" /> : <Video className="w-4.5 h-4.5" />}
                 </button>
               </div>
             </div>
           </div>
 
           {/* Hierarchical Diagnostics Panel */}
-          <div className="flex flex-col md:flex-row gap-8 items-center justify-between px-4">
+          <div className="flex flex-col md:flex-row gap-8 items-center justify-between px-6 py-8 bg-white rounded-[2rem] border border-slate-200 shadow-sm">
             {/* Primary Readiness Signals */}
             <div className="flex gap-12">
               <DiagnosticItem 
@@ -381,7 +368,7 @@ const PreCheck: React.FC<PreCheckProps> = ({
             </div>
 
             {/* Divider */}
-            <div className="hidden md:block w-px h-12 bg-white/10" />
+            <div className="hidden md:block w-px h-12 bg-slate-200" />
 
             {/* Secondary Support Signals */}
             <div className="flex gap-10">
@@ -405,35 +392,56 @@ const PreCheck: React.FC<PreCheckProps> = ({
 
         {/* RIGHT: THE CONTROL PANEL */}
         <aside className="flex flex-col gap-8 h-full">
-          {/* Lesson Context Card (Simplified) */}
-          <div className="flex items-center gap-5 px-2">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/10 shadow-xl relative shrink-0">
-              <img 
-                src={lessonData.coachAvatar} 
-                alt={lessonData.coachName}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-black text-white">{lessonData.coachName}</h2>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          {/* Lesson Context Card */}
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm">
+            <div className="flex items-center gap-5 mb-8">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden border border-slate-100 shadow-md relative shrink-0">
+                <img 
+                  src={lessonData.coachAvatar} 
+                  alt={lessonData.coachName}
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
               </div>
-              <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-tight">
-                {lessonData.courseTitle}
-              </p>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h2 className="text-xl font-bold text-slate-900">{lessonData.coachName}</h2>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
+                </div>
+                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Your Coach is Ready</p>
+              </div>
+            </div>
+
+            <div className="space-y-5 pt-6 border-t border-slate-100">
+              <div className="flex items-start gap-4">
+                <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0 border border-indigo-100">
+                  <BookOpen className="w-4.5 h-4.5 text-indigo-600" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Current Topic</label>
+                  <p className="text-sm font-bold text-slate-800 leading-tight">{lessonData.courseTitle}</p>
+                </div>
+              </div>
+              <div className="flex gap-8">
+                <div className="flex items-center gap-2.5">
+                  <Clock className="w-4 h-4 text-slate-400" />
+                  <span className="text-[11px] font-bold text-slate-600">{lessonData.duration} min</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Zap className="w-4 h-4 text-slate-400" />
+                  <span className="text-[11px] font-bold text-slate-600">HSK 4</span>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Setup Panel (Functional Hub) */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 space-y-8 shadow-2xl">
+          <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 space-y-8 shadow-sm">
             <div className="flex items-center justify-between">
-              <h3 className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.2em]">Hardware & Settings</h3>
+              <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Hardware & Settings</h3>
               <button 
                 onClick={retryChecks}
-                className="text-[10px] font-black text-indigo-400 uppercase tracking-widest hover:text-indigo-300 transition-colors flex items-center gap-2 group"
+                className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:text-indigo-700 transition-colors flex items-center gap-2 group"
               >
                 <RefreshCw className={`w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500 ${Object.values(checks).includes('checking') ? 'animate-spin' : ''}`} />
                 Retry Check
@@ -442,19 +450,19 @@ const PreCheck: React.FC<PreCheckProps> = ({
 
             <div className="space-y-4">
               {/* Audio Source Control */}
-              <div className="flex items-center justify-between bg-zinc-900/50 border border-white/5 p-4 rounded-2xl group transition-all hover:bg-zinc-900">
+              <div className="flex items-center justify-between bg-slate-50 border border-slate-100 p-4 rounded-2xl group transition-all hover:bg-slate-100/50">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center group-hover:bg-zinc-700 transition-colors">
-                    <Settings className="w-4 h-4 text-zinc-400" />
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-slate-200 shadow-sm group-hover:border-slate-300 transition-colors">
+                    <Settings className="w-4.5 h-4.5 text-slate-500" />
                   </div>
                   <div className="text-left">
-                    <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-0.5">Audio Source</p>
-                    <p className="text-[12px] font-bold text-white/90 truncate max-w-[140px]">MacBook Pro Mic...</p>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Audio Source</p>
+                    <p className="text-[12px] font-bold text-slate-800 truncate max-w-[120px]">MacBook Pro Mic...</p>
                   </div>
                 </div>
                 <button 
                   onClick={toggleMic}
-                  className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${isMicOn ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/20' : 'bg-rose-500/10 border-rose-500/20 text-rose-500 hover:bg-rose-500/20'}`}
+                  className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all border ${isMicOn ? 'bg-emerald-50 border-emerald-100 text-emerald-700 hover:bg-emerald-100' : 'bg-rose-50 border-rose-100 text-rose-700 hover:bg-rose-100'}`}
                 >
                   {isMicOn ? 'Active' : 'Muted'}
                 </button>
@@ -467,21 +475,17 @@ const PreCheck: React.FC<PreCheckProps> = ({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="p-4 bg-rose-500/5 border border-rose-500/10 rounded-2xl"
+                    className="p-4 bg-rose-50 border border-rose-100 rounded-2xl"
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <VideoOff className="w-4 h-4 text-rose-500" />
-                      <span className="text-[11px] font-black text-rose-500 uppercase tracking-widest">Camera Issue</span>
+                      <VideoOff className="w-4 h-4 text-rose-600" />
+                      <span className="text-[11px] font-bold text-rose-700 uppercase tracking-widest">Camera Issue</span>
                     </div>
-                    <p className="text-[11px] text-zinc-400 font-bold leading-relaxed">
+                    <p className="text-[11px] text-slate-600 font-medium leading-relaxed">
                       {cameraError === 'denied' 
-                        ? 'Access was denied. Please check your browser permissions to enable video.' 
-                        : 'No camera detected. You will enter the lesson in audio-only mode.'}
+                        ? 'Access denied. Please check browser permissions.' 
+                        : 'No camera detected. Audio-only mode is active.'}
                     </p>
-                    <button className="mt-3 text-[10px] font-black text-rose-400/80 hover:text-rose-400 uppercase tracking-widest flex items-center gap-1.5 transition-colors">
-                      <HelpCircle className="w-3 h-3" />
-                      Troubleshoot
-                    </button>
                   </motion.div>
                 )}
 
@@ -490,26 +494,26 @@ const PreCheck: React.FC<PreCheckProps> = ({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl"
+                    className="p-4 bg-amber-50 border border-amber-100 rounded-2xl"
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <Wifi className="w-4 h-4 text-amber-500" />
-                      <span className="text-[11px] font-black text-amber-500 uppercase tracking-widest">Weak Connection</span>
+                      <Wifi className="w-4 h-4 text-amber-600" />
+                      <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest">Weak Connection</span>
                     </div>
-                    <p className="text-[11px] text-zinc-400 font-bold leading-relaxed">
-                      Your network is unstable. Video quality may be affected. Try moving closer to your router.
+                    <p className="text-[11px] text-slate-600 font-medium leading-relaxed">
+                      Your network is unstable. Video quality may be affected.
                     </p>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className="p-4 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+              <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
                 <div className="flex items-center gap-3 mb-2">
-                  <Sparkles className="w-4 h-4 text-indigo-400" />
-                  <span className="text-[11px] font-black text-indigo-400 uppercase tracking-widest">Learning Tip</span>
+                  <Sparkles className="w-4 h-4 text-indigo-600" />
+                  <span className="text-[11px] font-bold text-indigo-700 uppercase tracking-widest">Learning Tip</span>
                 </div>
-                <p className="text-[11px] text-zinc-400 font-bold leading-relaxed">
-                  Using headphones reduces echo and helps you hear your coach's pronunciation more clearly.
+                <p className="text-[11px] text-slate-600 font-medium leading-relaxed">
+                  Using headphones helps you hear your coach's pronunciation more clearly.
                 </p>
               </div>
             </div>
@@ -519,8 +523,8 @@ const PreCheck: React.FC<PreCheckProps> = ({
           <div className="mt-auto flex flex-col gap-6">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${isReady ? 'bg-emerald-500' : 'bg-zinc-700'} transition-colors`} />
-                <span className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.2em]">
+                <div className={`w-2 h-2 rounded-full ${isReady ? 'bg-emerald-500' : 'bg-slate-300'} transition-colors`} />
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                   {getReadinessSummary()}
                 </span>
               </div>
@@ -531,10 +535,10 @@ const PreCheck: React.FC<PreCheckProps> = ({
                 onClick={onEnter}
                 disabled={!isReady}
                 className={`
-                  w-full h-20 rounded-[2rem] font-black text-sm uppercase tracking-[0.3em] transition-all relative overflow-hidden
+                  w-full h-20 rounded-[2rem] font-bold text-sm uppercase tracking-[0.2em] transition-all relative overflow-hidden
                   ${!isReady 
-                    ? 'bg-zinc-900 text-zinc-600 border border-white/5 cursor-not-allowed' 
-                    : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_24px_48px_-12px_rgba(79,70,229,0.5)] active:scale-[0.98]'}
+                    ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed' 
+                    : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-600/30 active:scale-[0.98]'}
                 `}
               >
                 <span className="relative z-10 flex items-center justify-center gap-4">
@@ -544,7 +548,7 @@ const PreCheck: React.FC<PreCheckProps> = ({
                 
                 {!isReady && (
                   <motion.div 
-                    className="absolute inset-0 bg-white/[0.03]"
+                    className="absolute inset-0 bg-indigo-600/5"
                     initial={{ width: '0%' }}
                     animate={{ width: '100%' }}
                     transition={{ duration: timeLeft, ease: "linear" }}
@@ -553,17 +557,17 @@ const PreCheck: React.FC<PreCheckProps> = ({
               </Button>
               
               {!isReady && (
-                <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-zinc-900 border border-white/10 px-5 py-2.5 rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap translate-y-2 group-hover:translate-y-0">
-                  <p className="text-[11px] font-black text-white uppercase tracking-widest flex items-center gap-2">
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-800 px-5 py-2.5 rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap translate-y-2 group-hover:translate-y-0">
+                  <p className="text-[11px] font-bold text-white uppercase tracking-widest flex items-center gap-2">
                     <Clock className="w-3.5 h-3.5 text-indigo-400" />
-                    Lesson starts in {formatTime(timeLeft)}
+                    Starts in {formatTime(timeLeft)}
                   </p>
                 </div>
               )}
             </div>
             
             {!isReady && (
-              <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] text-center">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">
                 Unlocks at {lessonData.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             )}
@@ -585,45 +589,39 @@ const DiagnosticItem: React.FC<{
     switch (status) {
       case 'ok':
         return {
-          bg: 'bg-emerald-500/10',
-          border: 'border-emerald-500/20',
-          text: 'text-emerald-500',
-          glow: 'shadow-[0_0_12px_rgba(16,185,129,0.4)]'
+          bg: 'bg-emerald-50',
+          border: 'border-emerald-100',
+          text: 'text-emerald-600',
+          iconBg: 'bg-emerald-100'
         };
       case 'warning':
         return {
-          bg: 'bg-amber-500/10',
-          border: 'border-amber-500/20',
-          text: 'text-amber-500',
-          glow: 'shadow-[0_0_12px_rgba(245,158,11,0.4)]'
+          bg: 'bg-amber-50',
+          border: 'border-amber-100',
+          text: 'text-amber-600',
+          iconBg: 'bg-amber-100'
         };
       case 'error':
-        return {
-          bg: 'bg-rose-500/10',
-          border: 'border-rose-500/20',
-          text: 'text-rose-500',
-          glow: 'shadow-[0_0_12px_rgba(244,63,94,0.4)]'
-        };
       case 'blocked':
         return {
-          bg: 'bg-rose-500/20',
-          border: 'border-rose-500/40',
-          text: 'text-rose-400',
-          glow: 'shadow-[0_0_12px_rgba(244,63,94,0.6)]'
+          bg: 'bg-rose-50',
+          border: 'border-rose-100',
+          text: 'text-rose-600',
+          iconBg: 'bg-rose-100'
         };
       case 'fallback':
         return {
-          bg: 'bg-indigo-500/10',
-          border: 'border-indigo-500/20',
-          text: 'text-indigo-400',
-          glow: 'shadow-[0_0_12px_rgba(99,102,241,0.4)]'
+          bg: 'bg-indigo-50',
+          border: 'border-indigo-100',
+          text: 'text-indigo-600',
+          iconBg: 'bg-indigo-100'
         };
       default:
         return {
-          bg: 'bg-zinc-900',
-          border: 'border-white/5',
-          text: 'text-zinc-600',
-          glow: ''
+          bg: 'bg-slate-50',
+          border: 'border-slate-100',
+          text: 'text-slate-400',
+          iconBg: 'bg-slate-100'
         };
     }
   };
@@ -641,7 +639,7 @@ const DiagnosticItem: React.FC<{
           )}
         </div>
         <div className="space-y-0.5">
-          <p className="text-[8px] font-black uppercase tracking-widest text-zinc-500">{label}</p>
+          <p className="text-[8px] font-bold uppercase tracking-widest text-slate-400">{label}</p>
           <p className={`text-[10px] font-bold uppercase tracking-widest ${styles.text} truncate max-w-[80px]`}>
             {status === 'checking' ? '...' : subtext || status}
           </p>
@@ -652,7 +650,7 @@ const DiagnosticItem: React.FC<{
 
   return (
     <div className="flex items-center gap-5">
-      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all border-2 ${styles.bg} ${styles.border} ${styles.text} ${styles.glow}`}>
+      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all border ${styles.bg} ${styles.border} ${styles.text}`}>
         {status === 'checking' ? (
           <RefreshCw className="w-6 h-6 animate-spin" />
         ) : (
@@ -660,8 +658,8 @@ const DiagnosticItem: React.FC<{
         )}
       </div>
       <div className="space-y-1">
-        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{label}</p>
-        <p className={`text-[12px] font-black uppercase tracking-widest ${styles.text}`}>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</p>
+        <p className={`text-[12px] font-bold uppercase tracking-widest ${styles.text}`}>
           {status === 'checking' ? 'Verifying...' : subtext || status}
         </p>
       </div>
