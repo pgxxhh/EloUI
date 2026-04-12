@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({
   onVerify = () => {},
   onResend = () => {}
 }) => {
-  const isFocusMode = currentView === 'ABOUT' || currentView === 'LIVE_LESSON' || currentView === 'EMAIL_VERIFICATION' || currentView === 'LESSON_REVIEW' || currentView === 'HISTORY_DETAIL' || currentView === 'SESSION' || currentView === 'LANDING' || currentView === 'COACH_LANDING' || currentView === 'COACH_APPLY' || currentView === 'COACH_STATUS' || currentView === 'COACH_ONBOARDING_SUCCESS' || currentView === 'COACH_ONBOARDING' || currentView === 'AUTH';
+  const isFocusMode = currentView === 'ABOUT' || currentView === 'LIVE_LESSON' || currentView === 'EMAIL_VERIFICATION' || currentView === 'LESSON_REVIEW' || currentView === 'HISTORY_DETAIL' || currentView === 'SESSION' || currentView === 'LANDING' || currentView === 'COACH_LANDING' || currentView === 'COACH_APPLY' || currentView === 'COACH_STATUS' || currentView === 'COACH_ONBOARDING_SUCCESS' || currentView === 'COACH_ONBOARDING' || currentView === 'AUTH' || currentView === 'SETTINGS';
 
   return (
     <div className={`min-h-screen flex flex-col ${isFocusMode ? '' : 'max-w-7xl mx-auto px-6'}`}>
@@ -100,9 +100,12 @@ const Layout: React.FC<LayoutProps> = ({
               </div>
             ) : (
               <div className="flex items-center gap-4 ml-4 pl-4 border-l border-zinc-100">
-                 <div className="w-8 h-8 bg-indigo-50 rounded-full flex items-center justify-center text-xs font-bold text-indigo-600 border border-indigo-100 cursor-pointer">
-                  JD
-                </div>
+                 <div 
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border cursor-pointer transition-all ${currentView === 'SETTINGS' ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100' : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100'}`}
+                  onClick={() => setView('SETTINGS')}
+                >
+                   JD
+                 </div>
                 <button 
                   className="text-sm font-medium text-zinc-500 hover:text-zinc-900"
                   onClick={onLogout}

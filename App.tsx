@@ -21,6 +21,7 @@ import CoachHub from './pages/CoachHub';
 import LiveLesson from './components/LiveLesson';
 import Admin from './pages/Admin';
 import LessonReview from './pages/LessonReview';
+import Settings from './pages/Settings';
 import PreCheck from './pages/PreCheck';
 import About from './pages/About';
 import CoachEarnings from './pages/CoachEarnings';
@@ -167,6 +168,8 @@ const App: React.FC = () => {
             onMaybeLater={() => setView('STUDENT_HOME')}
           />
         );
+      case 'SETTINGS':
+        return <Settings onBack={() => setView('STUDENT_HOME')} />;
       case 'COACH_DASHBOARD':
         return <CoachDashboard />;
       case 'COACH_LANDING':

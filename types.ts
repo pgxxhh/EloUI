@@ -30,6 +30,7 @@ export type AppView =
   | 'TRIAL_SUCCESS'
   | 'POST_TRIAL_UPGRADE'
   | 'ABOUT'
+  | 'SETTINGS'
   | 'LIVE_LESSON';
 
 export type EarningStatus = 'SETTLED_UNPAID' | 'IN_PAYOUT' | 'PAID';
