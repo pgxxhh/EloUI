@@ -101,6 +101,32 @@ export interface LessonRequest {
   createdAt: string;
 }
 
+export interface LearnerMemoryUpdate {
+  newlyCaptured: string[];
+  unstablePatterns: string[];
+  currentFocus: string;
+  nextLessonDirection: string;
+  confidence: {
+    label: string;
+    level: number; // 1-5
+  };
+}
+
+export interface SessionOutcome {
+  conclusion: string;
+  explanation: string;
+}
+
+export interface EvidenceMoment {
+  id: string;
+  original: string;
+  refined: string;
+  pinyin?: string;
+  explanation: string;
+  timestamp: string;
+  audioMoment?: number;
+}
+
 export interface SessionRecord {
   id: string;
   date: string;
@@ -110,6 +136,9 @@ export interface SessionRecord {
   score?: number;
   audioUrl?: string;
   summary?: string;
+  outcome?: SessionOutcome;
+  memoryUpdate?: LearnerMemoryUpdate;
+  topEvidence?: EvidenceMoment[];
   transcription: {
     speaker: 'COACH' | 'STUDENT';
     text: string;

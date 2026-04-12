@@ -70,6 +70,33 @@ export const SCENARIOS: Scenario[] = [
   },
 ];
 
+export const MOCK_HISTORY = [
+  {
+    id: '1',
+    scenarioTitle: 'Professional Introduction',
+    date: '2024-04-10',
+    coachName: 'Coach Sarah',
+    score: 92,
+    status: 'COMPLETED'
+  },
+  {
+    id: '2',
+    scenarioTitle: 'Business Meeting Opening',
+    date: '2024-04-08',
+    coachName: 'Coach James',
+    score: 88,
+    status: 'COMPLETED'
+  },
+  {
+    id: '3',
+    scenarioTitle: 'Daily Coffee Shop Chat',
+    date: '2024-04-05',
+    coachName: 'Coach Sarah',
+    score: 95,
+    status: 'COMPLETED'
+  }
+];
+
 export const Icons = {
   Mic: () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -139,6 +166,21 @@ export const Icons = {
   MessageSquare: () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
       <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3h9m-9 3h3m-4.5 5.25 3.75-3.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-13.5A2.25 2.25 0 0 0 2.25 4.5v13.5a2.25 2.25 0 0 0 2.25 2.25h.75v3.75Z" />
+    </svg>
+  ),
+  User: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+    </svg>
+  ),
+  BookOpen: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+    </svg>
+  ),
+  PhoneOff: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 3.75 16.5 16.5m-5.469-9.03a3.375 3.375 0 0 1 3.53 3.53m-7.139-7.139a3.375 3.375 0 0 0-3.53-3.53m-1.029 1.03c-1.126 1.126-1.719 2.697-1.719 4.39 0 5.625 4.5 10.125 10.125 10.125 1.693 0 3.264-.593 4.39-1.719m-12.109-12.11L3.75 3.75m16.5 16.5-1.846-1.846" />
     </svg>
   ),
 };

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+// Redesigned Learning Studio - Version 2.0
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Play, 
@@ -25,9 +26,19 @@ import {
   FileText,
   Layout,
   MessageCircle,
-  FileCode
+  FileCode,
+  Brain,
+  History as HistoryIcon,
+  TrendingUp,
+  Lock,
+  Settings,
+  MoreHorizontal,
+  PlayCircle,
+  ExternalLink
 } from 'lucide-react';
 import { Button, Card, Badge } from '../components/UI';
+import { MOCK_HISTORY } from '../constants';
+import { SessionOutcome, LearnerMemoryUpdate, EvidenceMoment } from '../types';
 
 // --- Types ---
 
@@ -50,18 +61,50 @@ interface TranscriptLine {
   };
 }
 
-interface PracticeCard {
-  id: string;
-  chinese: string;
-  pinyin: string;
-  english: string;
-  focus: string;
-  skill: string;
-  reason: string;
-  effort: string;
-}
+type TabType = 'Transcript' | 'Feedback' | 'History';
 
 // --- Mock Data ---
+
+const MOCK_OUTCOME: SessionOutcome = {
+  conclusion: "You're showing stronger control over workplace introductions.",
+  explanation: "Great progress today! You successfully navigated workplace small talk and accurately used '任职于' (to hold a position) in context. This formal expression significantly elevates your professional tone."
+};
+
+const MOCK_TOP_EVIDENCE: EvidenceMoment[] = [
+  {
+    id: 'e1',
+    original: "我在一个大公司工作",
+    refined: "我在一家大型企业任职",
+    pinyin: "Wǒ zài yì jiā dàxíng qǐyè rènzhí",
+    explanation: "In a professional context, using the measure word '一家' and the formal verb '任职' makes your introduction sound more sophisticated and appropriate for the workplace.",
+    timestamp: "00:42"
+  },
+  {
+    id: 'e2',
+    original: "我的同事们也都很努力",
+    refined: "我的同事们都兢兢业业",
+    pinyin: "Wǒ de tóngshìmen dōu jīng jīng yè yè",
+    explanation: "While '努力' is correct, '兢兢业业' is a common idiom (chengyu) used to describe someone who is dedicated and conscientious, which adds a native-like touch to your workplace descriptions.",
+    timestamp: "03:20"
+  }
+];
+
+const MOCK_MEMORY_UPDATE = {
+  newlyCaptured: [
+    { text: "Formal workplace self-introduction", source: "Evidence #1", impact: "Next lesson focus" },
+    { text: "Measure word '一家' for companies", source: "Evidence #1", impact: "Study Assistant priority" }
+  ],
+  unstablePatterns: [
+    { text: "Verb-resultative complements (加班加到)", source: "Transcript 01:15", impact: "Adaptive Planner focus" },
+    { text: "Past tense completion with '了'", source: "Transcript 02:14", impact: "Drill priority" }
+  ],
+  currentFocus: "Improving professional tone and structural accuracy in workplace social scenarios.",
+  nextLessonDirection: "Simulating project status reporting and feedback sessions.",
+  confidence: {
+    label: "Steady Growth",
+    level: 4
+  }
+};
 
 const MOCK_TRANSCRIPT: TranscriptLine[] = [
   { id: 't1', timestamp: '00:05', speaker: 'Coach', text: '你好！今天想聊点什么？', translation: 'Hello! What would you like to talk about today?' },
@@ -80,9 +123,7 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       betterVersion: '我在一家大型企业任职',
       pinyin: 'Wǒ zài yì jiā dàxíng qǐyè rènzhí',
       whyItMatters: '在职场语境下，使用量词“一家”并搭配正式词汇“任职”，会让表达显得更专业、更得体。',
-      category: '词汇升级',
-      drillDuration: '1 分钟',
-      drillGoal: '掌握职场正式自我介绍'
+      category: '词汇升级'
     }
   },
   { 
@@ -98,9 +139,7 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       betterVersion: '我昨天加班加到晚上十点',
       pinyin: 'Wǒ zuótiān jiābān jiā dào wǎnshàng shí diǎn',
       whyItMatters: '在“到”之前重复动词“加”，构成了动结式补语，能更清晰地强调动作的持续时间和结果。',
-      category: '语法修正',
-      drillDuration: '2 分钟',
-      drillGoal: '修正动结式补语的用法'
+      category: '语法修正'
     }
   },
   { 
@@ -116,9 +155,7 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       betterVersion: '买了三个苹果',
       pinyin: 'mǎi le sān gè píngguǒ',
       whyItMatters: '助词“了”在这里至关重要，它明确表示动作在过去已经完成。',
-      category: '语法修正',
-      drillDuration: '1 分钟',
-      drillGoal: '练习过去完成时的表达'
+      category: '语法修正'
     }
   },
   {
@@ -140,148 +177,75 @@ const MOCK_TRANSCRIPT: TranscriptLine[] = [
       betterVersion: '兢兢业业',
       pinyin: 'jīng jīng yè yè',
       whyItMatters: '“兢兢业业”是一个非常地道的成语，形容做事小心谨慎、认真负责，在职场评价中非常加分。',
-      category: '成语表达',
-      drillDuration: '2 分钟',
-      drillGoal: '学习职场高阶成语'
+      category: '成语表达'
     }
   }
 ];
 
-const PRACTICE_CARDS: PracticeCard[] = [
-  { 
-    id: 'p1', 
-    chinese: '我在一家大型企业任职。', 
-    pinyin: 'Wǒ zài yì jiā dàxíng qǐyè rènzhí.', 
-    english: 'I hold a position in a large corporation.', 
-    focus: '职场用语升级',
-    skill: '专业词汇',
-    reason: '将基础的“工作”升级为更具职业感的“任职”',
-    effort: '1 分钟'
-  },
-  { 
-    id: 'p2', 
-    chinese: '我昨天加班加到晚上十点。', 
-    pinyin: 'Wǒ zuótiān jiābān jiā dào wǎnshàng shí diǎn.', 
-    english: 'I worked overtime until 10 PM yesterday.', 
-    focus: '句式结构修正',
-    skill: '语法准确性',
-    reason: '修正表达持续时长时常见的结构错误',
-    effort: '2 分钟'
-  },
-  { 
-    id: 'p3', 
-    chinese: '我的同事们都兢兢业业。', 
-    pinyin: 'Wǒ de tóngshìmen dōu jīng jīng yè yè.', 
-    english: 'My colleagues are all very conscientious.', 
-    focus: '表达地道化',
-    skill: '母语级流利度',
-    reason: '引入高阶成语，使职场描述更生动专业',
-    effort: '2 分钟'
-  }
-];
-
-// --- Types ---
-
-type EvidenceGrade = 'FIX' | 'UPGRADE' | 'GOLDEN';
-type TabType = 'Transcript' | 'Feedback';
-
-interface AICoachStep {
-  id: 'REVIEW' | 'TRANSFER' | 'PRACTICE';
-  title: string;
-}
-
-const COACH_STEPS: AICoachStep[] = [
-  { id: 'REVIEW', title: '实战证据' },
-  { id: 'TRANSFER', title: '场景迁移' },
-  { id: 'PRACTICE', title: '专项操练' }
-];
-
-const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }> = ({ sessionId, onBack }) => {
+const LessonReview: React.FC<{ 
+  sessionId?: string | null; 
+  onBack?: () => void;
+  initialTab?: TabType;
+}> = ({ sessionId: initialSessionId, onBack, initialTab = 'Feedback' }) => {
   const [reviewStatus, setReviewStatus] = useState<'LOADING' | 'READY' | 'FAILED' | 'NO_RECORDING'>('LOADING');
-  const [selectedLineId, setSelectedLineId] = useState<string | null>('t5');
-  const [activeStep, setActiveStep] = useState<AICoachStep['id']>('REVIEW');
-  const [activeTab, setActiveTab] = useState<TabType>('Transcript');
-  const [filter, setFilter] = useState<'All' | 'Critical' | 'Upgrades' | 'Golden'>('All');
+  const [sessionId, setSessionId] = useState<string | null>(initialSessionId || '1');
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
+  const [filter, setFilter] = useState<'All' | 'Critical' | 'Upgrades'>('All');
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(75);
-  const [isRecording, setIsRecording] = useState(false);
-  const [showFullTranscript, setShowFullTranscript] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
   const totalDuration = 300;
   const transcriptRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Simulate AI report generation
     const timer = setTimeout(() => {
-      // If no session ID, simulate no recording
-      if (!sessionId && Math.random() > 0.9) {
-        setReviewStatus('NO_RECORDING');
-      } else {
-        setReviewStatus('READY');
-      }
-    }, 2500);
+      setReviewStatus('READY');
+    }, 1500);
     return () => clearTimeout(timer);
   }, [sessionId]);
-
-  const selectedLine = MOCK_TRANSCRIPT.find(l => l.id === selectedLineId);
 
   const filteredTranscript = MOCK_TRANSCRIPT.filter(line => {
     if (filter === 'All') return true;
     if (filter === 'Critical') return line.type === 'issue';
-    if (filter === 'Upgrades') return line.type === 'highlight';
-    if (filter === 'Golden') return line.type === 'new-phrase';
+    if (filter === 'Upgrades') return line.type === 'highlight' || line.type === 'new-phrase';
     return true;
   });
 
-  const criticalEvidence = MOCK_TRANSCRIPT.filter(l => l.type === 'issue' || l.type === 'highlight');
-
-  const handleLineClick = (line: TranscriptLine) => {
-    setSelectedLineId(line.id);
-    setActiveStep('REVIEW');
-    const [mins, secs] = line.timestamp.split(':').map(Number);
+  const handleJumpToTime = (timestamp: string) => {
+    const [mins, secs] = timestamp.split(':').map(Number);
     setCurrentTime(mins * 60 + secs);
-    
-    // Scroll to AI panel on mobile
-    if (window.innerWidth < 1024) {
-      document.getElementById('ai-workbench')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const getGradeConfig = (type?: string): { label: string; color: string; icon: any; grade: EvidenceGrade } => {
-    if (type === 'issue') return { label: '核心修正', color: 'rose', icon: AlertCircle, grade: 'FIX' };
-    if (type === 'highlight') return { label: '地道升级', color: 'indigo', icon: Sparkles, grade: 'UPGRADE' };
-    return { label: '金牌表达', color: 'emerald', icon: Star, grade: 'GOLDEN' };
+    setIsPlaying(true);
   };
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-indigo-100 animate-in fade-in duration-700 pb-20 relative overflow-hidden">
-      {/* Background Glows to match StudentHome */}
+      {/* Background Glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-indigo-50/40 to-transparent rounded-full blur-3xl -z-10"></div>
       
-      {/* Top Header: Refined Archive Style */}
+      {/* Top Header */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-4 md:px-8 py-4">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-6">
             <button onClick={onBack} className="p-2 hover:bg-zinc-100 rounded-full transition-colors">
               <RotateCcw className="w-4 h-4 text-zinc-500" />
             </button>
             <div className="space-y-0.5">
-              <h1 className="text-base md:text-lg font-bold text-zinc-900">口语复盘</h1>
-              <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">对话存档工作区</p>
+              <h1 className="text-base md:text-lg font-bold text-zinc-900">Session Review</h1>
+              <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">Learning Studio</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-zinc-50 rounded-lg border border-zinc-100">
               <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">2026年3月17日</span>
+              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-tight">March 17, 2026</span>
             </div>
             <Button variant="secondary" className="rounded-full px-5 py-2 text-[11px] font-bold uppercase tracking-wider">
-              分享
+              Share
             </Button>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-[1600px] mx-auto px-4 md:px-8 py-6 md:py-10">
+      <main className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 md:py-10">
         <AnimatePresence mode="wait">
           {reviewStatus === 'LOADING' ? (
             <motion.div 
@@ -296,50 +260,8 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
                 <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-indigo-600 animate-pulse" />
               </div>
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold text-zinc-900">正在分析您的对话...</h2>
-                <p className="text-zinc-500 font-medium">AI 正在识别关键学习时刻并生成您的复盘报告。</p>
-              </div>
-            </motion.div>
-          ) : reviewStatus === 'FAILED' ? (
-            <motion.div 
-              key="failed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
-            >
-              <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-500">
-                <AlertCircle className="w-10 h-10" />
-              </div>
-              <div className="text-center space-y-4">
-                <div className="space-y-1">
-                  <h2 className="text-2xl font-bold text-zinc-900">生成复盘报告失败</h2>
-                  <p className="text-zinc-500">处理您的课程数据时出现了问题。</p>
-                </div>
-                <Button onClick={() => setReviewStatus('LOADING')} variant="secondary" className="bg-zinc-900 text-white hover:bg-zinc-800">
-                  重试分析
-                </Button>
-              </div>
-            </motion.div>
-          ) : reviewStatus === 'NO_RECORDING' ? (
-            <motion.div 
-              key="no-recording"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center min-h-[60vh] space-y-8"
-            >
-              <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center text-zinc-300">
-                <Mic2 className="w-10 h-10" />
-              </div>
-              <div className="text-center space-y-4">
-                <div className="space-y-1">
-                  <h2 className="text-2xl font-bold text-zinc-900">未找到录音</h2>
-                  <p className="text-zinc-500">我们无法找到此课程的录音。如果课程时间过短，可能会发生这种情况。</p>
-                </div>
-                <Button onClick={onBack} variant="secondary" className="bg-zinc-900 text-white hover:bg-zinc-800">
-                  返回首页
-                </Button>
+                <h2 className="text-2xl font-bold text-zinc-900">Updating your learning memory...</h2>
+                <p className="text-zinc-500 font-medium">Elo is analyzing your session and refining your profile.</p>
               </div>
             </motion.div>
           ) : (
@@ -347,500 +269,517 @@ const LessonReview: React.FC<{ sessionId?: string | null; onBack?: () => void }>
               key="ready"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start"
+              className="flex flex-col lg:flex-row gap-12 items-start"
             >
-              {/* LEFT: Player Anchor (Sticky on Desktop) */}
-              <div className="w-full lg:w-[380px] lg:sticky lg:top-28 space-y-6">
-                <Card className="p-6 md:p-8 bg-white border-zinc-100 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden relative group">
+              {/* LEFT: Session Context Card (Sticky) */}
+              <div className="w-full lg:w-[340px] lg:sticky lg:top-28 space-y-6">
+                <Card className="p-6 bg-white border-zinc-100 shadow-xl shadow-zinc-200/30 rounded-[2rem] overflow-hidden relative">
                   <div className="space-y-6">
-                    <div className="space-y-1.5">
-                      <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em]">课程录音</p>
-                      <h3 className="text-lg font-bold text-zinc-900 leading-tight">与 Lin Wang 的对话</h3>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">场景:</span>
-                        <span className="text-[10px] font-bold text-zinc-600">职场社交闲谈</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Session Context</p>
+                      </div>
+                      <h3 className="text-xl font-bold text-zinc-900 leading-tight">Workplace Small Talk</h3>
+                      <div className="flex items-center gap-3 pt-1">
+                        <div className="flex items-center gap-1.5 px-2 py-1 bg-zinc-50 rounded-lg border border-zinc-100">
+                          <User className="w-3 h-3 text-zinc-400" />
+                          <span className="text-[10px] font-bold text-zinc-600">Lin Wang</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 px-2 py-1 bg-zinc-50 rounded-lg border border-zinc-100">
+                          <Clock className="w-3 h-3 text-zinc-400" />
+                          <span className="text-[10px] font-bold text-zinc-600">25 mins</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="space-y-5">
-                      <div className="relative h-12 flex items-end gap-[2px]">
-                        {Array.from({ length: 40 }).map((_, i) => {
-                          const height = 20 + Math.random() * 80;
-                          const isPlayed = (currentTime / totalDuration) * 40 > i;
-                          return (
-                            <div 
-                              key={i} 
-                              className={`flex-1 rounded-full transition-all duration-300 ${
-                                isPlayed ? 'bg-indigo-600' : 'bg-zinc-100'
-                              }`}
-                              style={{ height: `${height}%` }}
-                            />
-                          );
-                        })}
-                      </div>
-
+                    {/* Audio Player Strip */}
+                    <div className="space-y-4 pt-4 border-t border-zinc-50">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                           <button 
                             onClick={() => setIsPlaying(!isPlaying)}
-                            className="w-12 h-12 bg-zinc-900 text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-zinc-200"
+                            className="w-10 h-10 bg-zinc-900 text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg"
                           >
-                            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
+                            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
                           </button>
                           <div className="space-y-0.5">
-                            <p className="text-sm font-bold text-zinc-900">
+                            <p className="text-xs font-bold text-zinc-900">
                               {Math.floor(currentTime / 60)}:{(currentTime % 60).toString().padStart(2, '0')}
                             </p>
-                            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">/ 05:00</p>
+                            <p className="text-[9px] font-bold text-zinc-400">/ 05:00</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex gap-1">
                           <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-400">
-                            <RotateCcw className="w-4 h-4" />
+                            <RotateCcw className="w-3.5 h-3.5" />
                           </button>
                           <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors text-zinc-400">
-                            <Volume2 className="w-4 h-4" />
+                            <Volume2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
+                      </div>
+                      <div className="relative h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                        <div 
+                          className="absolute top-0 left-0 h-full bg-indigo-600 transition-all duration-300"
+                          style={{ width: `${(currentTime / totalDuration) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Accuracy/Fluency Mini Badges (De-emphasized) */}
+                    <div className="flex items-center gap-2 pt-2">
+                      <div className="flex-1 flex items-center justify-between px-3 py-2 bg-zinc-50 rounded-xl border border-zinc-100">
+                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Accuracy</span>
+                        <span className="text-[11px] font-bold text-zinc-900">92%</span>
+                      </div>
+                      <div className="flex-1 flex items-center justify-between px-3 py-2 bg-zinc-50 rounded-xl border border-zinc-100">
+                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">Fluency</span>
+                        <span className="text-[11px] font-bold text-zinc-900">B+</span>
                       </div>
                     </div>
                   </div>
                 </Card>
-
-            <div className="flex items-center justify-between px-6 py-4 bg-zinc-50/50 border border-zinc-100 rounded-3xl">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-[10px] font-bold text-indigo-600">LW</div>
-                <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">教练</p>
-                  <p className="text-xs font-bold text-zinc-900">Lin Wang</p>
-                </div>
               </div>
-              <div className="h-8 w-px bg-zinc-200" />
-              <div className="flex items-center gap-3 text-right">
-                <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">时长</p>
-                  <p className="text-xs font-bold text-zinc-900">25 分钟</p>
+
+              {/* RIGHT: Main Content Tabs */}
+              <div className="flex-1 w-full space-y-10">
+                <div className="flex items-center gap-10 border-b border-zinc-100">
+                  {([['Feedback', 'Learning Feedback'], ['Transcript', 'Transcript'], ['History', 'History']] as const).map(([tab, label]) => {
+                    const isActive = activeTab === tab;
+                    return (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`relative pb-4 text-sm font-bold transition-all ${
+                          isActive ? 'text-zinc-900' : 'text-zinc-400 hover:text-zinc-600'
+                        }`}
+                      >
+                        {label}
+                        {isActive && (
+                          <motion.div 
+                            layoutId="activeTab"
+                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 rounded-full"
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
-                <Clock className="w-4 h-4 text-zinc-400" />
-              </div>
-            </div>
-          </div>
 
-          {/* RIGHT: Workspace Content Area */}
-          <div className="flex-1 w-full space-y-8">
-            
-            {/* Top Tabs Navigation */}
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-1">
-              <div className="flex items-center gap-8">
-                {([['Transcript', '对话逐字稿'], ['Feedback', '学习反馈']] as const).map(([tab, label]) => {
-                  const isActive = activeTab === tab;
-                  return (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`relative pb-4 text-sm font-bold transition-all ${
-                        isActive ? 'text-zinc-900' : 'text-zinc-400 hover:text-zinc-600'
-                      }`}
+                <AnimatePresence mode="wait">
+                  {activeTab === 'Feedback' && (
+                    <motion.div
+                      key="feedback"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-16"
                     >
-                      {label}
-                      {isActive && (
-                        <motion.div 
-                          layoutId="activeTab"
-                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 rounded-full"
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-              
-              {activeTab === 'Transcript' && (
-                <div className="hidden md:flex items-center gap-2 bg-zinc-100 p-1 rounded-xl">
-                  {([['All', '全部'], ['Critical', '核心修正'], ['Upgrades', '地道表达']] as const).map(([f, label]) => (
-                    <button
-                      key={f}
-                      onClick={() => setFilter(f as any)}
-                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${
-                        filter === f ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <AnimatePresence mode="wait">
-              {activeTab === 'Transcript' && (
-                <motion.div
-                  key="transcript-tab"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-10"
-                >
-                  {/* Unified Transcript Control Area */}
-                  <div className="bg-zinc-50/50 border border-zinc-100 rounded-3xl p-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Zap className="w-3.5 h-3.5 text-indigo-500" />
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">跳转至关键时刻</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 bg-zinc-100/50 p-1 rounded-xl">
-                        {([['All', '全部'], ['Critical', '核心'], ['Upgrades', '升级']] as const).map(([f, label]) => (
-                          <button
-                            key={f}
-                            onClick={() => setFilter(f as any)}
-                            className={`px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all ${
-                              filter === f ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
-                            }`}
-                          >
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                      {criticalEvidence.map((line) => (
-                        <button
-                          key={line.id}
-                          onClick={() => handleLineClick(line)}
-                          className={`flex-shrink-0 px-3 py-2 rounded-xl border transition-all text-left flex items-center gap-2.5 ${
-                            selectedLineId === line.id 
-                              ? 'bg-indigo-50 border-indigo-200 shadow-sm' 
-                              : 'bg-white border-zinc-100 hover:border-zinc-200'
-                          }`}
-                        >
-                          <div className={`w-1.5 h-1.5 rounded-full bg-${getGradeConfig(line.type).color}-500`} />
-                          <span className="text-[11px] font-bold text-zinc-900 truncate max-w-[100px]">
-                            {line.text}
-                          </span>
-                          <span className="text-[9px] font-mono text-zinc-400 shrink-0">{line.timestamp}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Main Transcript List - Independent Scrolling Panel */}
-                  <div className="relative bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm flex flex-col overflow-hidden">
-                    <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none" />
-                    
-                    <div 
-                      ref={transcriptRef}
-                      className="h-[600px] overflow-y-auto scroll-smooth scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent divide-y divide-zinc-50 px-2"
-                    >
-                      {filteredTranscript.map((line) => {
-                        const config = getGradeConfig(line.type);
-                        const isSelected = selectedLineId === line.id;
-                        const [mins, secs] = line.timestamp.split(':').map(Number);
-                        const lineTime = mins * 60 + secs;
-                        const isCurrentlyPlaying = currentTime >= lineTime && currentTime < lineTime + 10;
-
-                        return (
-                          <div 
-                            key={line.id} 
-                            onClick={() => handleLineClick(line)}
-                            className={`group relative py-4 px-6 md:px-8 flex gap-4 md:gap-6 transition-all cursor-pointer border-l-4 ${
-                              isCurrentlyPlaying 
-                                ? 'bg-indigo-50/40 border-indigo-500' 
-                                : isSelected 
-                                  ? 'bg-zinc-50/50 border-zinc-200' 
-                                  : 'hover:bg-zinc-50/30 border-transparent'
-                            }`}
-                          >
-                            {/* Avatar & Speaker Info */}
-                            <div className="w-10 shrink-0 flex flex-col items-center gap-2 pt-1">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shadow-sm transition-all ${
-                                line.speaker === 'Coach' 
-                                  ? 'bg-indigo-100 text-indigo-600 border border-indigo-200' 
-                                  : 'bg-zinc-900 text-white'
-                              } ${isCurrentlyPlaying ? 'ring-2 ring-indigo-500 ring-offset-2' : ''}`}>
-                                {line.speaker === 'Coach' ? 'LW' : 'ME'}
-                              </div>
-                              <span className="text-[9px] font-mono text-zinc-300 font-bold">{line.timestamp}</span>
-                            </div>
-
-                            <div className="flex-1 min-w-0 space-y-1.5">
-                              <div className="flex items-center justify-between gap-4">
-                                <span className={`text-[9px] font-bold uppercase tracking-widest ${
-                                  line.speaker === 'Coach' ? 'text-indigo-400' : 'text-zinc-400'
-                                }`}>
-                                  {line.speaker}
-                                </span>
-                                {line.type && (
-                                  <Badge color={config.color} className="text-[8px] font-bold px-1.5 py-0.5 rounded-md">
-                                    {config.grade}
-                                  </Badge>
-                                )}
-                              </div>
-                              
-                              <div className="space-y-1">
-                                <p className={`text-base md:text-lg leading-snug transition-all ${
-                                  isCurrentlyPlaying ? 'text-zinc-900 font-bold' : 'text-zinc-700 font-medium'
-                                }`}>
-                                  {line.text}
-                                </p>
-                                {line.translation && (
-                                  <p className="text-xs text-zinc-400 leading-relaxed font-medium italic">{line.translation}</p>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* AI Marker Point */}
-                            {line.type && (
-                              <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                <div className={`w-1.5 h-1.5 rounded-full bg-${config.color}-500 shadow-sm animate-pulse`} />
-                              </div>
-                            )}
+                      {/* 1. Session Outcome */}
+                      <section className="space-y-6">
+                        <div className="space-y-3">
+                          <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Session Outcome
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {activeTab === 'Feedback' && (
-                <motion.div
-                  key="feedback-tab"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="grid grid-cols-1 xl:grid-cols-12 gap-10 items-start"
-                >
-                  <div className="xl:col-span-7 space-y-10">
-                    {/* Hero Recap */}
-                    <div className="space-y-6">
-                      <div className="space-y-4">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
-                          AI 分析摘要
+                          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 tracking-tight leading-tight">
+                            {MOCK_OUTCOME.conclusion}
+                          </h2>
+                          <p className="text-lg text-zinc-500 leading-relaxed max-w-3xl">
+                            {MOCK_OUTCOME.explanation}
+                          </p>
                         </div>
-                        <h2 className="text-3xl font-bold text-zinc-900 tracking-tight leading-tight">
-                          你已掌握 <span className="text-indigo-600">职场正式介绍</span>。
-                        </h2>
-                        <p className="text-base text-zinc-500 leading-relaxed">
-                          今天进步很大！你成功应对了职场社交闲谈，并准确地在语境中使用了 <span className="text-zinc-900 font-semibold underline decoration-indigo-200 decoration-4 underline-offset-4">“任职于”</span>。
-                        </p>
+                      </section>
+
+                      {/* 2. Top Evidence Moments */}
+                      <section className="space-y-8">
+                        <div className="flex items-center gap-4">
+                          <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
+                            <Zap className="w-3.5 h-3.5 text-indigo-500" />
+                            Top Evidence Moments
+                          </h3>
+                          <div className="h-px flex-1 bg-zinc-100" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {MOCK_TOP_EVIDENCE.map((evidence) => (
+                            <Card key={evidence.id} className="p-8 bg-white border-zinc-100 rounded-[2rem] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
+                              <div className="absolute top-0 right-0 p-4">
+                                <button 
+                                  onClick={() => {
+                                    setActiveTab('Transcript');
+                                    handleJumpToTime(evidence.timestamp);
+                                  }}
+                                  className="p-2 bg-zinc-50 text-zinc-400 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+                                >
+                                  <PlayCircle className="w-5 h-5" />
+                                </button>
+                              </div>
+                              <div className="space-y-6">
+                                <div className="space-y-2">
+                                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Original</p>
+                                  <p className="text-lg font-medium text-zinc-400 italic">"{evidence.original}"</p>
+                                </div>
+                                <div className="space-y-2">
+                                  <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Refined</p>
+                                  <p className="text-xl font-bold text-zinc-900 leading-tight">{evidence.refined}</p>
+                                  {evidence.pinyin && <p className="text-xs text-zinc-400 font-medium">{evidence.pinyin}</p>}
+                                </div>
+                                <div className="pt-4 border-t border-zinc-50">
+                                  <p className="text-sm text-zinc-600 leading-relaxed">{evidence.explanation}</p>
+                                </div>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      </section>
+
+                      {/* 3. Learner Memory Update */}
+                      <section className="space-y-8">
+                        <div className="flex items-center gap-4">
+                          <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
+                            <Brain className="w-3.5 h-3.5 text-emerald-500" />
+                            Learner Memory Update
+                          </h3>
+                          <div className="h-px flex-1 bg-zinc-100" />
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Memory Active</span>
+                            <button className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors">
+                              <Settings className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                          <div className="xl:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Newly Captured */}
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Newly Captured Progress</p>
+                                </div>
+                                <button className="text-[9px] font-bold text-zinc-300 hover:text-zinc-500 uppercase tracking-widest">Edit</button>
+                              </div>
+                              <div className="space-y-3">
+                                {MOCK_MEMORY_UPDATE.newlyCaptured.map((item, i) => (
+                                  <div key={i} className="p-5 bg-emerald-50/30 border border-emerald-100/50 rounded-2xl group relative space-y-2">
+                                    <div className="flex items-center gap-3">
+                                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                                      <p className="text-sm font-bold text-zinc-900">{item.text}</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 pl-7">
+                                      <div className="flex items-center gap-1">
+                                        <Link className="w-2.5 h-2.5 text-zinc-400" />
+                                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">{item.source}</span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <TrendingUp className="w-2.5 h-2.5 text-emerald-500" />
+                                        <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-tight">{item.impact}</span>
+                                      </div>
+                                    </div>
+                                    <button className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1 hover:bg-emerald-100 rounded-md transition-all">
+                                      <MoreHorizontal className="w-3.5 h-3.5 text-emerald-600" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Unstable Patterns */}
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Still Unstable / Focus</p>
+                                </div>
+                                <button className="text-[9px] font-bold text-zinc-300 hover:text-zinc-500 uppercase tracking-widest">Edit</button>
+                              </div>
+                              <div className="space-y-3">
+                                {MOCK_MEMORY_UPDATE.unstablePatterns.map((item, i) => (
+                                  <div key={i} className="p-5 bg-amber-50/30 border border-amber-100/50 rounded-2xl group relative space-y-2">
+                                    <div className="flex items-center gap-3">
+                                      <Target className="w-4 h-4 text-amber-500 shrink-0" />
+                                      <p className="text-sm font-bold text-zinc-900">{item.text}</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 pl-7">
+                                      <div className="flex items-center gap-1">
+                                        <Link className="w-2.5 h-2.5 text-zinc-400" />
+                                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">{item.source}</span>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <Zap className="w-2.5 h-2.5 text-amber-500" />
+                                        <span className="text-[9px] font-bold text-amber-600 uppercase tracking-tight">{item.impact}</span>
+                                      </div>
+                                    </div>
+                                    <button className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1 hover:bg-amber-100 rounded-md transition-all">
+                                      <MoreHorizontal className="w-3.5 h-3.5 text-amber-600" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Memory Summary Card */}
+                          <div className="xl:col-span-4">
+                            <Card className="p-8 bg-zinc-900 text-white rounded-[2.5rem] space-y-8 relative overflow-hidden shadow-2xl shadow-zinc-900/20">
+                              <div className="absolute top-0 right-0 p-6">
+                                <Lock className="w-4 h-4 text-zinc-700" />
+                              </div>
+                              <div className="space-y-4">
+                                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Confidence Level</p>
+                                <div className="flex items-center gap-3">
+                                  <p className="text-2xl font-bold">{MOCK_MEMORY_UPDATE.confidence.label}</p>
+                                  <div className="flex gap-1">
+                                    {[1, 2, 3, 4, 5].map(s => (
+                                      <div key={s} className={`w-1.5 h-1.5 rounded-full ${s <= MOCK_MEMORY_UPDATE.confidence.level ? 'bg-emerald-500' : 'bg-zinc-800'}`} />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="space-y-4">
+                                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Recommended Path</p>
+                                <p className="text-sm font-medium text-zinc-300 leading-relaxed">
+                                  {MOCK_MEMORY_UPDATE.nextLessonDirection}
+                                </p>
+                              </div>
+                              <Button className="w-full bg-white text-zinc-900 hover:bg-zinc-100 rounded-2xl py-4 font-bold shadow-lg">
+                                Review Memory Details
+                              </Button>
+                            </Card>
+                          </div>
+                        </div>
+                      </section>
+
+                      {/* 4. Next Recommended Action */}
+                      <section className="pt-10">
+                        <div className="p-10 bg-zinc-50 border border-zinc-100 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                          <div className="space-y-3 relative">
+                            <div className="flex items-center gap-2 text-indigo-600">
+                              <TrendingUp className="w-4 h-4" />
+                              <span className="text-[10px] font-bold uppercase tracking-widest">Next Action</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-zinc-900">Solidify your progress</h3>
+                            <p className="text-zinc-500 max-w-md text-sm leading-relaxed">
+                              Based on your session, we recommend practicing these workplace expressions in a new scenario to ensure long-term retention.
+                            </p>
+                          </div>
+                          <div className="flex flex-col sm:flex-row gap-3 relative w-full md:w-auto">
+                            <Button className="bg-indigo-600 text-white hover:bg-indigo-700 rounded-2xl px-8 py-4 font-bold shadow-lg shadow-indigo-200/50 flex-1 md:flex-none">
+                              Start Next Practice
+                            </Button>
+                            <Button variant="secondary" className="bg-white text-zinc-600 hover:bg-zinc-50 border-zinc-200 rounded-2xl px-8 py-4 font-bold flex-1 md:flex-none">
+                              Schedule Lesson
+                            </Button>
+                          </div>
+                        </div>
+                      </section>
+                    </motion.div>
+                  )}
+
+                  {activeTab === 'Transcript' && (
+                    <motion.div
+                      key="transcript"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-8"
+                    >
+                      {/* Transcript Header / Controls */}
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <MessageSquare className="w-5 h-5" />
+                          </div>
+                          <div className="space-y-0.5">
+                            <h3 className="text-lg font-bold text-zinc-900">Evidence Reader</h3>
+                            <p className="text-xs text-zinc-400 font-medium">Review key moments with audio playback</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 bg-zinc-100 p-1 rounded-xl self-start">
+                          {([['All', 'All'], ['Critical', 'Critical'], ['Upgrades', 'Upgrades']] as const).map(([f, label]) => (
+                            <button
+                              key={f}
+                              onClick={() => setFilter(f as any)}
+                              className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${
+                                filter === f ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
+                              }`}
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-100 space-y-1">
-                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">准确率</p>
-                          <p className="text-xl font-bold text-zinc-900">92%</p>
-                        </div>
-                        <div className="p-4 bg-zinc-50 rounded-2xl border border-zinc-100 space-y-1">
-                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">流利度</p>
-                          <p className="text-xl font-bold text-zinc-900">B+</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Key Feedback Points */}
-                    <section className="space-y-6">
-                      <h3 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                        核心反馈点
-                      </h3>
-                      <div className="space-y-4">
-                        {criticalEvidence.slice(0, 2).map((line, idx) => (
-                          <Card key={idx} className="p-6 bg-white border-zinc-100 rounded-3xl shadow-sm hover:shadow-md transition-all group">
-                            <div className="flex items-start justify-between gap-4 mb-4">
-                              <Badge color={getGradeConfig(line.type).color} className="text-[9px] font-bold px-2 py-0.5">
-                                {getGradeConfig(line.type).label}
-                              </Badge>
-                              <button 
-                                onClick={() => {
-                                  setActiveTab('Transcript');
-                                  handleLineClick(line);
-                                }}
-                                className="text-[10px] font-bold text-indigo-600 flex items-center gap-1 hover:gap-2 transition-all"
+                      {/* Main Transcript List */}
+                      <div className="bg-white rounded-[2.5rem] border border-zinc-100 shadow-sm overflow-hidden">
+                        <div className="divide-y divide-zinc-50">
+                          {filteredTranscript.map((line) => {
+                            const isSelected = currentTime >= (Number(line.timestamp.split(':')[0]) * 60 + Number(line.timestamp.split(':')[1])) && 
+                                             currentTime < (Number(line.timestamp.split(':')[0]) * 60 + Number(line.timestamp.split(':')[1]) + 10);
+                            
+                            return (
+                              <div 
+                                key={line.id}
+                                onClick={() => handleJumpToTime(line.timestamp)}
+                                className={`group flex gap-6 p-8 transition-all cursor-pointer border-l-4 ${
+                                  isSelected ? 'bg-indigo-50/40 border-indigo-500' : 'hover:bg-zinc-50/30 border-transparent'
+                                }`}
                               >
-                                在逐字稿中查看 <ArrowRight className="w-3 h-3" />
-                              </button>
+                                <div className="w-12 shrink-0 flex flex-col items-center gap-3">
+                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold shadow-sm transition-all ${
+                                    line.speaker === 'Coach' 
+                                      ? 'bg-indigo-100 text-indigo-600 border border-indigo-200' 
+                                      : 'bg-zinc-900 text-white'
+                                  }`}>
+                                    {line.speaker === 'Coach' ? 'LW' : 'ME'}
+                                  </div>
+                                  <span className="text-[10px] font-mono text-zinc-300 font-bold">{line.timestamp}</span>
+                                </div>
+
+                                <div className="flex-1 space-y-4">
+                                  <div className="flex items-center justify-between">
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${
+                                      line.speaker === 'Coach' ? 'text-indigo-400' : 'text-zinc-400'
+                                    }`}>
+                                      {line.speaker}
+                                    </span>
+                                    {line.type && (
+                                      <Badge color={line.type === 'issue' ? 'rose' : 'indigo'} className="text-[9px] font-bold px-2 py-0.5 rounded-md">
+                                        {line.type === 'issue' ? 'CRITICAL' : 'UPGRADE'}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <div className="space-y-2">
+                                    <p className={`text-xl leading-relaxed transition-all ${
+                                      isSelected ? 'text-zinc-900 font-bold' : 'text-zinc-700 font-medium'
+                                    }`}>
+                                      {line.text}
+                                    </p>
+                                    {line.translation && (
+                                      <p className="text-sm text-zinc-400 font-medium italic">{line.translation}</p>
+                                    )}
+                                  </div>
+
+                                  {/* Inline Feedback if any */}
+                                  {line.aiFeedback && (
+                                    <motion.div 
+                                      initial={{ opacity: 0, y: 10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      className="mt-6 p-6 bg-white border border-zinc-100 rounded-2xl shadow-sm space-y-4"
+                                    >
+                                      <div className="flex items-center gap-2 text-indigo-600">
+                                        <Sparkles className="w-4 h-4" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">AI Insight</span>
+                                      </div>
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-1">
+                                          <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Better Version</p>
+                                          <p className="text-lg font-bold text-zinc-900">{line.aiFeedback.betterVersion}</p>
+                                          <p className="text-xs text-zinc-400">{line.aiFeedback.pinyin}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Why it matters</p>
+                                          <p className="text-sm text-zinc-600 leading-relaxed">{line.aiFeedback.whyItMatters}</p>
+                                        </div>
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeTab === 'History' && (
+                    <motion.div
+                      key="history"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-10"
+                    >
+                      {/* History Header */}
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <h3 className="text-2xl font-bold text-zinc-900">Learning Progression</h3>
+                          <p className="text-sm text-zinc-500">See how your skills are evolving over time</p>
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2 bg-zinc-50 rounded-xl border border-zinc-100">
+                          <TrendingUp className="w-4 h-4 text-emerald-500" />
+                          <span className="text-xs font-bold text-zinc-600">Overall Score: 92</span>
+                        </div>
+                      </div>
+
+                      {/* Progression Timeline */}
+                      <div className="space-y-6">
+                        {MOCK_HISTORY.map((session, idx) => (
+                          <Card key={session.id} className="group p-8 bg-white border-zinc-100 rounded-[2.5rem] hover:shadow-xl transition-all relative overflow-hidden">
+                            {idx === 0 && (
+                              <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500" />
+                            )}
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                              <div className="flex items-center gap-6">
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${
+                                  idx === 0 ? 'bg-indigo-600 text-white' : 'bg-zinc-50 text-zinc-400'
+                                }`}>
+                                  <HistoryIcon className="w-6 h-6" />
+                                </div>
+                                <div className="space-y-1.5">
+                                  <div className="flex items-center gap-3">
+                                    <h4 className="text-xl font-bold text-zinc-900">{session.scenarioTitle}</h4>
+                                    {idx === 0 && <Badge color="indigo">Current</Badge>}
+                                  </div>
+                                  <div className="flex items-center gap-4 text-xs text-zinc-400 font-medium">
+                                    <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {session.date}</span>
+                                    <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" /> {session.coachName}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-10">
+                                <div className="text-right space-y-1">
+                                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Score</p>
+                                  <p className="text-2xl font-bold text-zinc-900">{session.score}</p>
+                                </div>
+                                <div className="h-10 w-px bg-zinc-100" />
+                                <button 
+                                  onClick={() => setSessionId(session.id)}
+                                  className="p-4 bg-zinc-50 text-zinc-400 rounded-2xl group-hover:bg-zinc-900 group-hover:text-white transition-all"
+                                >
+                                  <ArrowRight className="w-5 h-5" />
+                                </button>
+                              </div>
                             </div>
-                            <div className="space-y-3">
-                              <p className="text-sm font-bold text-zinc-900 leading-relaxed">
-                                "{line.aiFeedback?.whatYouSaid}" → <span className="text-indigo-600">"{line.aiFeedback?.betterVersion}"</span>
-                              </p>
-                              <p className="text-xs text-zinc-500 leading-relaxed">
-                                {line.aiFeedback?.whyItMatters}
-                              </p>
-                            </div>
+
+                            {/* Progression Context */}
+                            {idx < MOCK_HISTORY.length - 1 && (
+                              <div className="mt-8 pt-8 border-t border-zinc-50 flex items-center gap-4">
+                                <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                                  <TrendingUp className="w-3.5 h-3.5" />
+                                </div>
+                                <p className="text-xs text-zinc-500 font-medium leading-relaxed">
+                                  Built upon the focus from <span className="text-zinc-900 font-bold">{MOCK_HISTORY[idx+1].scenarioTitle}</span>. 
+                                  Successfully improved accuracy by <span className="text-emerald-600 font-bold">+{session.score - MOCK_HISTORY[idx+1].score}%</span>.
+                                </p>
+                              </div>
+                            )}
                           </Card>
                         ))}
                       </div>
-                    </section>
-
-                    {/* Book Next Lesson */}
-                    <div className="pt-10 border-t border-zinc-100">
-                      <div className="flex items-center justify-between p-6 bg-zinc-50 rounded-3xl border border-zinc-100">
-                        <div className="space-y-1">
-                          <p className="text-sm font-bold text-zinc-900">准备好进行下一步了吗？</p>
-                          <p className="text-xs text-zinc-400">距离下一个里程碑还有 2 节课。</p>
-                        </div>
-                        <Button variant="secondary" className="rounded-xl px-6 py-2 text-xs font-bold">
-                          预约课程
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* AI Coaching Loop */}
-                  <div className="xl:col-span-5 space-y-6 xl:sticky xl:top-28">
-                    <div className="flex items-center justify-between px-2">
-                      <h3 className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">
-                        互动练习
-                      </h3>
-                    </div>
-                    
-                    <AnimatePresence mode="wait">
-                      {selectedLine?.aiFeedback ? (
-                        <motion.div
-                          key={`${selectedLine.id}-${activeStep}`}
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -15 }}
-                        >
-                          <Card className="p-7 bg-white border-zinc-100 shadow-xl shadow-zinc-200/50 rounded-[2.5rem] min-h-[400px] flex flex-col">
-                            <div className="flex bg-zinc-100 p-1 rounded-xl mb-6">
-                              {COACH_STEPS.map(step => (
-                                <button
-                                  key={step.id}
-                                  onClick={() => setActiveStep(step.id)}
-                                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${
-                                    activeStep === step.id ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-400 hover:text-zinc-500'
-                                  }`}
-                                >
-                                  {step.title}
-                                </button>
-                              ))}
-                            </div>
-
-                            {activeStep === 'REVIEW' && (
-                              <div className="space-y-6 flex-1">
-                                <div className="space-y-4">
-                                  <div className="flex items-center gap-3">
-                                    <Badge color={getGradeConfig(selectedLine.type).color} className="text-[10px] font-bold px-2.5 py-1 rounded-lg">
-                                      {getGradeConfig(selectedLine.type).label}
-                                    </Badge>
-                                    <span className="text-[11px] font-mono text-zinc-400 font-bold">@ {selectedLine.timestamp}</span>
-                                  </div>
-                                  <p className="text-lg font-bold text-zinc-900 leading-[1.3]">
-                                    “{selectedLine.aiFeedback.whatYouSaid}”
-                                  </p>
-                                </div>
-                                <div className="p-5 bg-indigo-50/30 rounded-[1.5rem] border border-indigo-100/50 space-y-3">
-                                  <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">深度解析</p>
-                                  <p className="text-sm text-zinc-600 leading-relaxed font-medium">{selectedLine.aiFeedback.whyItMatters}</p>
-                                </div>
-                                <div className="mt-auto pt-6">
-                                  <Button 
-                                    onClick={() => setActiveStep('TRANSFER')}
-                                    className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-3"
-                                  >
-                                    下一步：场景迁移
-                                    <ArrowRight className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
-
-                            {activeStep === 'TRANSFER' && (
-                              <div className="space-y-6 flex-1">
-                                <div className="space-y-6">
-                                  <div className="space-y-2">
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">应用场景</p>
-                                    <h4 className="text-xl font-bold text-zinc-900 leading-tight">求职面试</h4>
-                                  </div>
-                                  <div className="p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 space-y-3">
-                                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">目标句式</p>
-                                    <p className="text-2xl font-bold text-indigo-900">“我曾任职于...”</p>
-                                  </div>
-                                </div>
-                                <div className="mt-auto pt-6">
-                                  <Button 
-                                    onClick={() => setActiveStep('PRACTICE')}
-                                    className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-3"
-                                  >
-                                    立即尝试
-                                    <ChevronRight className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
-
-                            {activeStep === 'PRACTICE' && (
-                              <div className="space-y-6 flex-1">
-                                <div className="space-y-6 text-center py-4">
-                                  <p className="text-xs text-zinc-500 font-medium">请大声朗读：</p>
-                                  <p className="text-xl font-bold text-zinc-900">“我曾任职于一家大型企业。”</p>
-                                  <div className="flex flex-col items-center gap-4">
-                                    <button 
-                                      onMouseDown={() => setIsRecording(true)}
-                                      onMouseUp={() => setIsRecording(false)}
-                                      className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
-                                        isRecording ? 'bg-rose-500 scale-110 shadow-xl shadow-rose-200' : 'bg-zinc-900'
-                                      }`}
-                                    >
-                                      <Mic2 className={`w-6 h-6 text-white ${isRecording ? 'animate-pulse' : ''}`} />
-                                    </button>
-                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                                      {isRecording ? '正在录音...' : '按住说话'}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="mt-auto pt-6 flex gap-3">
-                                  <Button variant="secondary" className="flex-1 py-3.5 rounded-2xl font-bold text-[10px]" onClick={() => setActiveStep('REVIEW')}>
-                                    返回
-                                  </Button>
-                                  <Button className="flex-[2] py-3.5 bg-emerald-600 text-white rounded-2xl font-bold text-[10px]">
-                                    完成练习
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
-                          </Card>
-                        </motion.div>
-                      ) : (
-                        <Card className="p-10 border-dashed border-zinc-200 bg-zinc-50/30 rounded-[2.5rem] flex flex-col items-center justify-center text-center space-y-4 min-h-[300px]">
-                          <Target className="w-6 h-6 text-zinc-200" />
-                          <p className="text-xs text-zinc-400 font-medium max-w-[180px]">
-                            在逐字稿中选择一个高亮部分开始练习。
-                          </p>
-                        </Card>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-
-    {/* Bottom Action Bar */}
-    {reviewStatus === 'READY' && (
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="mt-12 flex justify-center"
-      >
-        <Button 
-          onClick={onBack}
-          className="bg-zinc-900 text-white px-12 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl hover:bg-zinc-800 transition-all"
-        >
-          完成复盘
-          <ArrowRight className="w-5 h-5" />
-        </Button>
-      </motion.div>
-    )}
-  </main>
-</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+    </div>
   );
 };
 

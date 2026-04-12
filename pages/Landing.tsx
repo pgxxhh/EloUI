@@ -97,7 +97,7 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTr
           </div>
         </div>
 
-        {/* Hero Visual Element - Simplified & Productized */}
+        {/* Hero Visual Element - Redesigned as Live Classroom Snapshot */}
         <div className="absolute top-20 right-0 w-1/2 h-full hidden lg:block">
           <motion.div 
             initial={{ opacity: 0, x: 100 }}
@@ -105,47 +105,84 @@ const Landing: React.FC<LandingProps> = ({ onStart, onLogin, onBecomeCoach, onTr
             transition={{ duration: 1, ease: "easeOut" }}
             className="relative w-full h-full flex items-center justify-end pr-12"
           >
-            <div className="relative w-[460px] h-[520px] bg-white rounded-[3rem] shadow-2xl border border-zinc-100 overflow-hidden flex flex-col">
-              <div className="p-8 border-b border-zinc-50 flex items-center justify-between bg-zinc-50/30">
+            <div className="relative w-[480px] h-[540px] bg-white rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-zinc-100 overflow-hidden flex flex-col">
+              {/* Card Header: Lesson Context */}
+              <div className="px-8 py-5 border-b border-zinc-50 flex items-center justify-between bg-white">
                 <div className="flex items-center gap-3">
-                  <img src="https://picsum.photos/seed/coach-li/100/100" className="w-10 h-10 rounded-full border-2 border-white shadow-sm" alt="Coach" />
-                  <div>
-                    <p className="text-xs font-black text-zinc-900">李伟 <span className="text-[10px] text-zinc-400 font-bold ml-1 uppercase tracking-widest">Li Wei</span></p>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[9px] uppercase tracking-[0.2em] text-emerald-600 font-black">Live Now</span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Live Classroom</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1 bg-zinc-50 rounded-full border border-zinc-100">
+                  <Icons.Clock className="w-3 h-3 text-zinc-400" />
+                  <span className="text-[10px] font-bold text-zinc-500 tabular-nums">14:59</span>
+                </div>
+              </div>
+              
+              {/* Card Body: The Classroom Stage */}
+              <div className="flex-1 p-6 flex flex-col gap-4">
+                {/* Main Video Stage (Tutor) */}
+                <div className="relative flex-1 bg-zinc-100 rounded-[2rem] overflow-hidden border border-zinc-200/50 group">
+                  <img 
+                    src="https://picsum.photos/seed/tutor-li/800/600?blur=1" 
+                    className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105" 
+                    alt="Tutor Preview" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  
+                  {/* Tutor Info Overlay */}
+                  <div className="absolute bottom-4 left-4 flex items-center gap-3">
+                    <img src="https://picsum.photos/seed/coach-li/100/100" className="w-8 h-8 rounded-full border-2 border-white shadow-sm" alt="Coach" />
+                    <div className="text-white">
+                      <p className="text-[10px] font-black uppercase tracking-widest leading-none">Coach</p>
+                      <p className="text-xs font-bold">Li Wei</p>
+                    </div>
+                  </div>
+
+                  {/* Self Preview (Learner) */}
+                  <div className="absolute top-4 right-4 w-24 h-32 bg-zinc-800 rounded-2xl border-2 border-white/20 shadow-xl overflow-hidden">
+                    <img 
+                      src="https://picsum.photos/seed/learner-jing/200/300?blur=2" 
+                      className="w-full h-full object-cover opacity-60" 
+                      alt="Learner Preview" 
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Icons.User className="w-6 h-6 text-white/40" />
                     </div>
                   </div>
                 </div>
-                <div className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg font-mono text-[10px] font-black tracking-widest">14:59</div>
-              </div>
-              
-              <div className="flex-1 p-12 flex flex-col justify-center items-center">
-                <div className="w-full space-y-12">
-                  <div className="flex justify-center items-end gap-1.5 h-20">
-                    {[0.4, 0.7, 0.3, 0.9, 0.5, 0.8, 0.4, 0.6, 0.3, 0.7, 0.5, 0.9, 0.4, 0.6, 0.8].map((h, i) => (
-                      <motion.div
-                        key={i}
-                        animate={{ height: [`${h * 30}%`, `${h * 100}%`, `${h * 30}%`] }}
-                        transition={{ duration: 1.2 + (i * 0.05), repeat: Infinity, ease: "easeInOut" }}
-                        className="w-1 bg-indigo-500/60 rounded-full"
-                      />
-                    ))}
+
+                {/* Lesson Topic Card */}
+                <div className="bg-indigo-50/50 border border-indigo-100/50 p-5 rounded-2xl flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-indigo-100">
+                    <Icons.BookOpen className="w-5 h-5 text-indigo-600" />
                   </div>
-                  <div className="text-center px-4">
-                    <p className="text-xl text-zinc-800 font-serif italic leading-relaxed opacity-90">
-                      “Don't worry about the grammar, <br /> just try to describe the feeling.”
-                    </p>
+                  <div className="flex-1">
+                    <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-0.5">Current Topic</p>
+                    <p className="text-xs font-bold text-zinc-800">"Describing your hometown in Shanghai"</p>
+                  </div>
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-indigo-100 flex items-center justify-center text-[8px] font-bold text-indigo-600">
+                        {i === 3 ? '+2' : ''}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
-              <div className="p-8 bg-zinc-50/50 border-t border-zinc-100 flex justify-center gap-6">
-                <div className="w-14 h-14 rounded-full bg-indigo-600 flex items-center justify-center shadow-xl shadow-indigo-200">
-                  <Icons.Mic className="w-6 h-6 text-white" />
-                </div>
-                <div className="w-14 h-14 rounded-full bg-white border border-zinc-200 flex items-center justify-center shadow-sm">
-                  <Icons.X className="w-6 h-6 text-zinc-300" />
+              {/* Card Footer: Classroom Controls */}
+              <div className="px-8 py-6 bg-zinc-50/30 border-t border-zinc-100 flex justify-center gap-4">
+                <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-2xl border border-zinc-200 shadow-sm">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <Icons.Mic className="w-4 h-4" />
+                  </div>
+                  <div className="w-8 h-8 rounded-xl bg-zinc-50 text-zinc-400 flex items-center justify-center">
+                    <Icons.Video className="w-4 h-4" />
+                  </div>
+                  <div className="w-px h-6 bg-zinc-200 mx-1" />
+                  <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <Icons.PhoneOff className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
             </div>

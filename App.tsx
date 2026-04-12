@@ -16,8 +16,6 @@ import CoachStatus, { ApplicationStatus } from './pages/CoachStatus';
 import CoachApprovedOnboarding from './pages/CoachApprovedOnboarding';
 import Billing from './pages/Billing';
 import Auth from './pages/Auth';
-import History from './pages/History';
-import HistoryDetail from './pages/HistoryDetail';
 import FindCoach from './pages/FindCoach';
 import CoachHub from './pages/CoachHub';
 import LiveLesson from './components/LiveLesson';
@@ -104,17 +102,14 @@ const App: React.FC = () => {
         );
       case 'HISTORY':
         return (
-          <History 
+          <LessonReview 
+            initialTab="History"
             onBack={() => setView('STUDENT_HOME')} 
-            onSelectSession={(id) => {
-              setSelectedSessionId(id);
-              setView('HISTORY_DETAIL');
-            }} 
           />
         );
       case 'HISTORY_DETAIL':
         return (
-          <HistoryDetail 
+          <LessonReview 
             sessionId={selectedSessionId}
             onBack={() => setView('HISTORY')} 
           />
